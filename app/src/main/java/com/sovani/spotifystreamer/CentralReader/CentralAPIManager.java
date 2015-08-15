@@ -43,6 +43,8 @@ public class CentralAPIManager {
             query.put("country", "us");
 
             tracks = CentralAPIManager.getService().getArtistTopTrack(spotifyID, query);
+
+
         }catch (RetrofitError e) {
                 Log.d("CentralAPIManager", e.toString());
             }

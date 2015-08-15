@@ -13,6 +13,8 @@
     <!-- top 10 related -->
     <string name="title_activity_top_ten">Top 10 Tracks</string>
     <string name="error_no_tracks">No tracks found. Please select another artist.</string>
+    <string name="title_activity_play_track">PlayTrackActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 
 

@@ -1,11 +1,14 @@
 package com.sovani.spotifystreamer;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -39,6 +42,18 @@ public class TopTenFragment extends Fragment {
         if (savedInstance != null ) {
             trackList = savedInstance.getParcelableArrayList("TOP_TEN_RESULTS");
         }
+        trackListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("TOP10", "onItemClick " + position);
+                //User has clicked on a track, and we need to play the track
+                Intent trackIntent = new Intent(getActivity(), PlayTrackActivity.class);
+                trackIntent.putExtra("ARTIST_NAME", "TODO: Artist Name");
+                trackIntent.putParcelableArrayListExtra("TRACK_LIST", trackList);
+                trackIntent.putExtra("TRACK_POSITION", position);
+                getActivity().startActivity(trackIntent);
+            }
+        });
 
         return fragmentView;
     }
