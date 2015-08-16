@@ -27,6 +27,11 @@
             android:name=".PlayTrackActivity"
             android:label="@string/title_activity_play_track" >
         </activity>
+        <service
+            android:name=".MediaService.AudioPlayBackService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>

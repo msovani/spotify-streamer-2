@@ -1,16 +1,25 @@
 package com.sovani.spotifystreamer;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.sovani.spotifystreamer.MediaService.AudioPlayBackService;
 import com.sovani.spotifystreamer.model.ParcelableTrack;
 
 import java.util.ArrayList;
 
 public class PlayTrackActivity extends AppCompatActivity {
+    private boolean mBound;
+    private ServiceConnection mConnection;
+    AudioPlayBackService maudioPlayBackService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +50,9 @@ public class PlayTrackActivity extends AppCompatActivity {
                 playFragment.setTrackList(tracks, position);
             }
         }
+
+        initAudioServiceConnection();
+
     }
 
 
@@ -63,6 +75,44 @@ public class PlayTrackActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void initAudioServiceConnection(){
+        mConnection = new ServiceConnection() {
+            public void onServiceConnected(ComponentName className, IBinder service) {
+                AudioPlayBackService.LocalBinder binder = (AudioPlayBackService.LocalBinder) service;
+                maudioPlayBackService = binder.getService();
+            }
+
+            public void onServiceDisconnected(ComponentName className) {
+                // This is called when the connection with the service has been
+                // unexpectedly disconnected -- that is, its process crashed.
+                maudioPlayBackService = null;
+            }
+        };
+
+        if (mConnection!=null)
+        {
+            Intent startIntent = new Intent(this, AudioPlayBackService.class);
+            mBound = bindService(startIntent, mConnection, Context.BIND_AUTO_CREATE);
+        }
+
+    }
+
+    public void playTracks(ArrayList<ParcelableTrack> trackList){
+
+
+        if (maudioPlayBackService != null){
+            String[] tracks = new String[trackList.size()];
+            int i=0;
+            for (ParcelableTrack track : trackList)
+            {
+                tracks[i] =   track.getPreviewURL();
+                i++;
+            }
+            maudioPlayBackService.setTracks(tracks);
+        }
     }
 
 }

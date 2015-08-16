@@ -253,7 +253,7 @@ public class ArtistFragment extends Fragment  {
                     url = image.url;
                 }
 
-                ParcelableTrack pTrack = new ParcelableTrack(track.album.name, track.name, url, track.id);
+                ParcelableTrack pTrack = new ParcelableTrack(track.album.name, track.name, url, track.id, track.preview_url);
 
                 trackList.add(pTrack);
             }
