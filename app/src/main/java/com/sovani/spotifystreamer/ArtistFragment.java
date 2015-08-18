@@ -26,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
@@ -248,12 +249,23 @@ public class ArtistFragment extends Fragment  {
 
             for (Track track : tracks.tracks) {
                 String url = null;
+
+
                 if (track.album.images.size()>0) {
                     Image image = track.album.images.get(0);
                     url = image.url;
                 }
 
-                ParcelableTrack pTrack = new ParcelableTrack(track.album.name, track.name, url, track.id, track.preview_url);
+                 StringBuilder artist = new StringBuilder();
+                 for (ArtistSimple artistName : track.artists)
+                 {
+                     if (artist.length()>0)
+                         artist.append(", ");
+
+                     artist.append(artistName.name);
+                 }
+
+                ParcelableTrack pTrack = new ParcelableTrack(track.album.name, track.name, url, track.id, track.preview_url, artist.toString());
 
                 trackList.add(pTrack);
             }

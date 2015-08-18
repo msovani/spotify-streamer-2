@@ -11,6 +11,11 @@ public class ParcelableTrack implements Parcelable{
     private final String url;
     private final String id;
     private final String previewURL;
+    private final String artists;
+
+    public String getArtists() {
+        return artists;
+    }
 
     public String getPreviewURL() {
         return previewURL;
@@ -28,13 +33,14 @@ public class ParcelableTrack implements Parcelable{
         return url;
     }
 
-    public ParcelableTrack(String vName, String vNumber, String imageurl, String idnumber, String audioURL)
+    public ParcelableTrack(String vName, String vNumber, String imageurl, String idnumber, String audioURL, String artistsNames)
     {
         this.albumName = vName;
         this.trackName = vNumber;
         this.url = imageurl;
         this.id = idnumber;
         this.previewURL = audioURL;
+        this.artists = artistsNames;
     }
 
     public String getId() {
@@ -48,6 +54,7 @@ public class ParcelableTrack implements Parcelable{
         url = in.readString();
         id = in.readString();
         previewURL = in.readString();
+        artists = in.readString();
     }
 
     @Override
@@ -64,6 +71,7 @@ public class ParcelableTrack implements Parcelable{
         parcel.writeString(url);
         parcel.writeString(id);
         parcel.writeString(previewURL);
+        parcel.writeString(artists);
     }
 
     public static final Parcelable.Creator<ParcelableTrack> CREATOR = new Parcelable.Creator<ParcelableTrack>() {

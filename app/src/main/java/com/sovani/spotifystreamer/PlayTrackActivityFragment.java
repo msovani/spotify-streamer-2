@@ -31,6 +31,7 @@ public class PlayTrackActivityFragment extends Fragment {
     private boolean isPlaying;
     private TextView albumTitle;
     private TextView trackName;
+    private TextView artistName;
 
     private ImageView albumCover;
 
@@ -49,7 +50,7 @@ public class PlayTrackActivityFragment extends Fragment {
 
         albumTitle = (TextView) rootView.findViewById(R.id.album_title);
         trackName = (TextView) rootView.findViewById(R.id.track_title);
-
+        artistName = (TextView) rootView.findViewById(R.id.artist_name);
 
         prevButton = (ImageButton) rootView.findViewById(R.id.button_prev);
         prevButton.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +101,7 @@ public class PlayTrackActivityFragment extends Fragment {
 
         albumTitle.setText(track.getAlbumName());
         trackName.setText(track.getTrackName());
+        artistName.setText(track.getArtists());
 
         if (track.getUrl().length() > 0) {
             String url = track.getUrl();

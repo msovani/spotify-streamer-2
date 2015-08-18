@@ -46,9 +46,10 @@ public class TopTenFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("TOP10", "onItemClick " + position);
+                ParcelableTrack track = trackList.get(position);
                 //User has clicked on a track, and we need to play the track
                 Intent trackIntent = new Intent(getActivity(), PlayTrackActivity.class);
-                trackIntent.putExtra("ARTIST_NAME", "TODO: Artist Name");
+                trackIntent.putExtra("ARTIST_NAME", track.getArtists());
                 trackIntent.putParcelableArrayListExtra("TRACK_LIST", trackList);
                 trackIntent.putExtra("TRACK_POSITION", position);
                 getActivity().startActivity(trackIntent);
