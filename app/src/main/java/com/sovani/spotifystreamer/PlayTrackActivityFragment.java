@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.sovani.spotifystreamer.CentralReader.CentralAPIManager;
 import com.sovani.spotifystreamer.model.ParcelableTrack;
@@ -28,6 +29,8 @@ public class PlayTrackActivityFragment extends Fragment {
     private ImageButton playPauseButton;
     private ImageButton nextButton;
     private boolean isPlaying;
+    private TextView albumTitle;
+    private TextView trackName;
 
     private ImageView albumCover;
 
@@ -43,6 +46,10 @@ public class PlayTrackActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView  =   inflater.inflate(R.layout.fragment_play_track, container, false);
+
+        albumTitle = (TextView) rootView.findViewById(R.id.album_title);
+        trackName = (TextView) rootView.findViewById(R.id.track_title);
+
 
         prevButton = (ImageButton) rootView.findViewById(R.id.button_prev);
         prevButton.setOnClickListener(new View.OnClickListener() {
@@ -75,8 +82,11 @@ public class PlayTrackActivityFragment extends Fragment {
             }
         });
 
+
+
         if ( (trackList != null) && (trackList.size()>position)) {
              albumCover = (ImageView) rootView.findViewById(R.id.image_track);
+
 
             gotoTrack(position);
         }
@@ -87,6 +97,9 @@ public class PlayTrackActivityFragment extends Fragment {
     private void gotoTrack(int trackNumber)
     {
         ParcelableTrack track = trackList.get(trackNumber);
+
+        albumTitle.setText(track.getAlbumName());
+        trackName.setText(track.getTrackName());
 
         if (track.getUrl().length() > 0) {
             String url = track.getUrl();
