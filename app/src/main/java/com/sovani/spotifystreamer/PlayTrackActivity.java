@@ -20,6 +20,7 @@ public class PlayTrackActivity extends AppCompatActivity {
     private boolean mBound;
     private ServiceConnection mConnection;
     AudioPlayBackService maudioPlayBackService;
+    AudioPlayBackService.LocalBinder binder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +50,21 @@ public class PlayTrackActivity extends AppCompatActivity {
             if (tracks != null) {
                 playFragment.setTrackList(tracks, position);
             }
+            binder = (AudioPlayBackService.LocalBinder) savedInstanceState.getBinder("AUDIO_BINDER");
         }
 
         initAudioServiceConnection();
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (mConnection != null)
+        {
+            outState.putBinder("AUDIO_BINDER", binder);
+        }
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -71,6 +81,9 @@ public class PlayTrackActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == android.R.id.home)
         {
+            if (maudioPlayBackService != null){
+                unbindService(mConnection);
+            }
             onBackPressed();
         }
 
@@ -79,25 +92,35 @@ public class PlayTrackActivity extends AppCompatActivity {
 
 
     public void initAudioServiceConnection(){
-        mConnection = new ServiceConnection() {
-            public void onServiceConnected(ComponentName className, IBinder service) {
-                AudioPlayBackService.LocalBinder binder = (AudioPlayBackService.LocalBinder) service;
-                maudioPlayBackService = binder.getService();
-            }
 
-            public void onServiceDisconnected(ComponentName className) {
-                // This is called when the connection with the service has been
-                // unexpectedly disconnected -- that is, its process crashed.
-                maudioPlayBackService = null;
-            }
-        };
+        if (binder == null) {
+            mConnection = new ServiceConnection() {
+                public void onServiceConnected(ComponentName className, IBinder service) {
+                    binder = (AudioPlayBackService.LocalBinder) service;
+                    maudioPlayBackService = binder.getService();
+                }
 
-        if (mConnection!=null)
-        {
-            Intent startIntent = new Intent(this, AudioPlayBackService.class);
-            mBound = bindService(startIntent, mConnection, Context.BIND_AUTO_CREATE);
+                public void onServiceDisconnected(ComponentName className) {
+                    // This is called when the connection with the service has been
+                    // unexpectedly disconnected -- that is, its process crashed.
+                    maudioPlayBackService = null;
+                }
+            };
+
+                if (mConnection != null) {
+                    Intent startIntent = new Intent(this, AudioPlayBackService.class);
+                    mBound = bindService(startIntent, mConnection, Context.BIND_AUTO_CREATE);
+                }
+        }else {
+            maudioPlayBackService = binder.getService();
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
     }
 
     public void playTracks(ArrayList<ParcelableTrack> trackList){

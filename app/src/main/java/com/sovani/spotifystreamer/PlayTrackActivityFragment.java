@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.sovani.spotifystreamer.CentralReader.CentralAPIManager;
@@ -23,9 +24,9 @@ public class PlayTrackActivityFragment extends Fragment {
 
     private ArrayList<ParcelableTrack> trackList;
     private int position;
-    private Button prevButton;
-    private Button playPauseButton;
-    private Button nextButton;
+    private ImageButton prevButton;
+    private ImageButton playPauseButton;
+    private ImageButton nextButton;
     private boolean isPlaying;
 
     private ImageView albumCover;
@@ -43,7 +44,7 @@ public class PlayTrackActivityFragment extends Fragment {
 
         View rootView  =   inflater.inflate(R.layout.fragment_play_track, container, false);
 
-        prevButton = (Button) rootView.findViewById(R.id.button_prev);
+        prevButton = (ImageButton) rootView.findViewById(R.id.button_prev);
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,7 +53,7 @@ public class PlayTrackActivityFragment extends Fragment {
         });
 
 
-        nextButton = (Button) rootView.findViewById(R.id.button_next);
+        nextButton = (ImageButton) rootView.findViewById(R.id.button_next);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +61,7 @@ public class PlayTrackActivityFragment extends Fragment {
             }
         });
 
-        playPauseButton = (Button) rootView.findViewById(R.id.button_play_pause);
+        playPauseButton = (ImageButton) rootView.findViewById(R.id.button_play_pause);
         playPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
