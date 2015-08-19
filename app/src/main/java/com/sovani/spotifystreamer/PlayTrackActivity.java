@@ -137,5 +137,20 @@ public class PlayTrackActivity extends AppCompatActivity {
             maudioPlayBackService.setTracks(tracks);
         }
     }
+    public void pauseTrack()
+    {
+
+        if (maudioPlayBackService != null){
+            maudioPlayBackService.pausePlayer();
+        }
+    }
+
+    public void resumeTrack()
+    {
+
+        if (maudioPlayBackService != null){
+            maudioPlayBackService.resumePlayer();
+        }
+    }
 
 }

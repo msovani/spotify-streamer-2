@@ -76,6 +76,7 @@ public class PlayTrackActivityFragment extends Fragment {
                 if (isPlaying)
                 {
                     isPlaying = false;
+                    pauseTrack();
                 }else {
                     isPlaying = true;
                     playTrack();
@@ -143,7 +144,13 @@ public class PlayTrackActivityFragment extends Fragment {
             ArrayList<ParcelableTrack> selectedTrackList = new ArrayList<ParcelableTrack>();
             selectedTrackList.add(trackList.get(position));
             ((PlayTrackActivity) getActivity()).playTracks(selectedTrackList);
-
     }
+    private void pauseTrack(){
+        ((PlayTrackActivity) getActivity()).pauseTrack();
+    }
+    private void resumeTrack(){
+        ((PlayTrackActivity) getActivity()).pauseTrack();
+    }
+
 
 }
