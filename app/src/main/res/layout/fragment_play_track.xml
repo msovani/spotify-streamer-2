@@ -27,18 +27,18 @@
         >
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="30sp"
+            android:layout_height="wrap_content"
             android:id="@+id/album_title"
             />
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="30sp"
+            android:layout_height="wrap_content"
             android:id="@+id/track_title"
             android:layout_below="@+id/album_title"
             />
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="30sp"
+            android:layout_height="wrap_content"
             android:id="@+id/artist_name"
             android:layout_below="@+id/track_title"
             />

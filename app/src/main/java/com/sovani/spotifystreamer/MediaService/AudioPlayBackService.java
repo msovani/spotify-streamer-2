@@ -101,6 +101,40 @@ public class AudioPlayBackService extends Service {
         playTracks();
     }
 
+    public void pausePlayer()
+    {
+
+        if (mp != null) {
+            if (mp.isPlaying()) {
+                mp.pause();
+            }
+        }
+
+    }
+
+    public void resumePlayer()
+    {
+
+        if (mp != null) {
+            if (!mp.isPlaying()) {
+                mp.start();
+            }
+        }
+
+    }
+
+
+    public void startPlayer()
+    {
+
+        if (mp != null) {
+            if (!mp.isPlaying()) {
+                mp.start();
+            }
+        }
+
+    }
+
 
     @Override
     public IBinder onBind(Intent intent) {
