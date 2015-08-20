@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ public class PlayTrackActivityFragment extends Fragment {
     private ImageView albumCover;
     private SeekBar seekBar;
     private Handler mHandler = null;
+    private Runnable statusUpdater = null;
 
 
 
@@ -87,6 +89,7 @@ public class PlayTrackActivityFragment extends Fragment {
             }
         });
 
+        setTrackList(((PlayTrackActivity)getActivity()).getTracks(), ((PlayTrackActivity)getActivity()).getPosition());
 
         if ( (trackList != null) && (trackList.size()>position)) {
              albumCover = (ImageView) rootView.findViewById(R.id.image_track);
@@ -97,24 +100,31 @@ public class PlayTrackActivityFragment extends Fragment {
 
         if (mHandler == null) {
             mHandler = new Handler();
-            getActivity().runOnUiThread(new Runnable() {
+
+            statusUpdater = new Runnable() {
 
                 @Override
                 public void run() {
-                    if (mediaPlayer != null) {
-                        if (mediaPlayer.isPlaying()) {
-                            seekBar.setMax(0);
-                            seekBar.setMax(mediaPlayer.getDuration());
-                            int mCurrentPosition = mediaPlayer.getCurrentPosition();
-                            seekBar.setProgress(mCurrentPosition);
-                        } else {
-                            seekBar.setMax(0);
-                            seekBar.setProgress(0);
+                    try {
+                        mediaPlayer = ((PlayTrackActivity)getActivity()).getServiceMediaPlayer();
+                        if (mediaPlayer != null) {
+                            if (mediaPlayer.isPlaying()) {
+                                seekBar.setMax(0);
+                                seekBar.setMax(mediaPlayer.getDuration());
+                                int mCurrentPosition = mediaPlayer.getCurrentPosition();
+                                seekBar.setProgress(mCurrentPosition);
+                            } else {
+                                seekBar.setMax(0);
+                                seekBar.setProgress(0);
+                            }
                         }
+                    } catch (Exception e) {
+                        Log.e("PlayFragment", "Exception during progress update thread" + e.toString());
                     }
                     mHandler.postDelayed(this, 100);
                 }
-            });
+            };
+            getActivity().runOnUiThread(statusUpdater);
         }
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -136,6 +146,8 @@ public class PlayTrackActivityFragment extends Fragment {
                 }
             }
         });
+
+        gotoTrack(position);
 
         return rootView;
     }
@@ -236,6 +248,13 @@ public class PlayTrackActivityFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        if ((mHandler != null) && (statusUpdater != null))
+        {
+            mHandler.removeCallbacks(statusUpdater);
+        }
+        super.onDestroy();
 
-
+    }
 }

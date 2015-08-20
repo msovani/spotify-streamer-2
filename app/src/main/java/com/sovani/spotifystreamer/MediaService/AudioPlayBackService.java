@@ -19,17 +19,17 @@ public class AudioPlayBackService extends Service {
     };
     private int currentTrack = 0;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.d(DEBUG_TAG, "In onCreate.");
 
-    }
 
     private void playTracks(){
         try {
             Uri file = Uri.parse(tracks[this.currentTrack]);
-            mp = new MediaPlayer();
+            if (mp == null ) {
+                mp = new MediaPlayer();
+            }else{
+                mp.release();
+                mp = new MediaPlayer();
+            }
             mp.setDataSource(this, file);
             mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -42,28 +42,7 @@ public class AudioPlayBackService extends Service {
             mp.prepare();
 
 
-//            mp.setOnCompletionListener(new OnCompletionListener() {
-//
-//                @Override
-//                public void onCompletion(MediaPlayer mp) {
-//                    //We need to go to next track if we have more than 1 track.
-//                    if (tracks.length>1) {
-//                        currentTrack = (currentTrack + 1) % tracks.length;
-//                        Uri nextTrack = Uri.parse(tracks[currentTrack]);
-//                        try {
-//                            mp.reset();
-//                            mp.setDataSource(AudioPlayBackService.this, nextTrack);
-//                            mp.prepare();
-//
-//                        } catch (Exception e) {
-//                            // TODO Auto-generated catch block
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                }
-//
-//            });
+
 
         } catch (Exception e) {
             Log.e(DEBUG_TAG, "Player failed", e);
