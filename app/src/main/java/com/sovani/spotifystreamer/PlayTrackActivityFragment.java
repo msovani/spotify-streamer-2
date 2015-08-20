@@ -52,7 +52,7 @@ public class PlayTrackActivityFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
 
         View rootView  =   inflater.inflate(R.layout.fragment_play_track, container, false);
 
@@ -116,6 +116,26 @@ public class PlayTrackActivityFragment extends Fragment {
                 }
             });
         }
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBarParam) {
+                if (mediaPlayer!=null)
+                {
+                    if (mediaPlayer.isPlaying()) mediaPlayer.seekTo(seekBarParam.getProgress());
+                }
+            }
+        });
 
         return rootView;
     }

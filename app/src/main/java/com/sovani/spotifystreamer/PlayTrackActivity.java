@@ -43,7 +43,7 @@ public class PlayTrackActivity extends AppCompatActivity {
                 playFragment.setTrackList(tracks, position);
             }
 
-            getSupportFragmentManager().beginTransaction().replace(
+            getSupportFragmentManager().beginTransaction().add(
                     android.R.id.content, playFragment, "TOP_TEN_FRAGMENT_TAG").commit();
 
         }else{
