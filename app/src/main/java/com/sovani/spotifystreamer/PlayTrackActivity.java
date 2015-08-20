@@ -41,6 +41,7 @@ public class PlayTrackActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(android.R.style.Theme_DeviceDefault_Light_Dialog);
         super.onCreate(savedInstanceState);
         tracks = this.getIntent().getParcelableArrayListExtra("TRACK_LIST");
         setPosition(this.getIntent().getIntExtra("TRACK_POSITION", 0));
