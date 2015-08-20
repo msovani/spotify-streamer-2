@@ -2,20 +2,17 @@ package com.sovani.spotifystreamer;
 
 import android.media.MediaPlayer;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.sovani.spotifystreamer.CentralReader.CentralAPIManager;
 import com.sovani.spotifystreamer.model.ParcelableTrack;
 import com.squareup.picasso.Picasso;
 
@@ -198,7 +195,7 @@ public class PlayTrackActivityFragment extends Fragment {
     }
 
     private void playTrack(){
-            ArrayList<ParcelableTrack> selectedTrackList = new ArrayList<ParcelableTrack>();
+            ArrayList<ParcelableTrack> selectedTrackList = new ArrayList<>();
             selectedTrackList.add(trackList.get(position));
             ((PlayTrackActivity) getActivity()).playTracks(selectedTrackList);
             mediaPlayer = ((PlayTrackActivity) getActivity()).getServiceMediaPlayer();

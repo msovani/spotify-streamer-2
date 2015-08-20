@@ -70,7 +70,9 @@ public class PlayTrackActivity extends AppCompatActivity {
         }else{
 
             binder = (AudioPlayBackService.LocalBinder) savedInstanceState.getBinder("AUDIO_BINDER");
-            maudioPlayBackService = binder.getService();
+            if (binder != null) {
+                maudioPlayBackService = binder.getService();
+            }
 
         }
 

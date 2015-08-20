@@ -1,16 +1,7 @@
 package com.sovani.spotifystreamer.CentralReader;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.util.Log;
 
-import com.sovani.spotifystreamer.MediaService.AudioPlayBackService;
-import com.sovani.spotifystreamer.model.ParcelableTrack;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
