@@ -191,7 +191,7 @@ public class PlayTrackActivityFragment extends Fragment {
             isPlaying = false;
             pauseTrack();
             playPauseButton.setImageResource(R.drawable.ic_play_arrow_black);
-            seekBar.setVisibility(View.GONE);
+            seekBar.setVisibility(View.INVISIBLE);
         }else {
             isPlaying = true;
             playTrack();
@@ -201,10 +201,14 @@ public class PlayTrackActivityFragment extends Fragment {
     }
 
     private void pauseTrack(){
-        ((PlayTrackActivity) getActivity()).pauseTrack();
+        if (getActivity()!= null) {
+            ((PlayTrackActivity) getActivity()).pauseTrack();
+        }
     }
     private void resumeTrack(){
-        ((PlayTrackActivity) getActivity()).resumeTrack();
+        if (getActivity()!= null){
+            ((PlayTrackActivity) getActivity()).resumeTrack();
+        }
     }
 
 
