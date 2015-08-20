@@ -107,7 +107,7 @@ public class PlayTrackActivityFragment extends Fragment {
                             seekBar.setMax(mediaPlayer.getDuration());
                             int mCurrentPosition = mediaPlayer.getCurrentPosition();
                             seekBar.setProgress(mCurrentPosition);
-                        }else {
+                        } else {
                             seekBar.setMax(0);
                             seekBar.setProgress(0);
                         }
@@ -214,7 +214,12 @@ public class PlayTrackActivityFragment extends Fragment {
             seekBar.setVisibility(View.INVISIBLE);
         }else {
             isPlaying = true;
-            playTrack();
+            if (mediaPlayer!= null)
+            {
+                mediaPlayer.start();
+            }else {
+                playTrack();
+            }
             playPauseButton.setImageResource(R.drawable.ic_pause_black);
             seekBar.setVisibility(View.VISIBLE);
         }
