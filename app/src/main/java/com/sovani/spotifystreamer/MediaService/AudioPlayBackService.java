@@ -42,28 +42,28 @@ public class AudioPlayBackService extends Service {
             mp.prepare();
 
 
-            mp.setOnCompletionListener(new OnCompletionListener() {
-
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    //We need to go to next track if we have more than 1 track.
-                    if (tracks.length>1) {
-                        currentTrack = (currentTrack + 1) % tracks.length;
-                        Uri nextTrack = Uri.parse(tracks[currentTrack]);
-                        try {
-                            mp.reset();
-                            mp.setDataSource(AudioPlayBackService.this, nextTrack);
-                            mp.prepare();
-
-                        } catch (Exception e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    }
-
-                }
-
-            });
+//            mp.setOnCompletionListener(new OnCompletionListener() {
+//
+//                @Override
+//                public void onCompletion(MediaPlayer mp) {
+//                    //We need to go to next track if we have more than 1 track.
+//                    if (tracks.length>1) {
+//                        currentTrack = (currentTrack + 1) % tracks.length;
+//                        Uri nextTrack = Uri.parse(tracks[currentTrack]);
+//                        try {
+//                            mp.reset();
+//                            mp.setDataSource(AudioPlayBackService.this, nextTrack);
+//                            mp.prepare();
+//
+//                        } catch (Exception e) {
+//                            // TODO Auto-generated catch block
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                }
+//
+//            });
 
         } catch (Exception e) {
             Log.e(DEBUG_TAG, "Player failed", e);

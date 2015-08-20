@@ -48,13 +48,13 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_album_details"
         >
         <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/player_seek"
-            />
+            android:visibility="gone"
+            android:splitTrack="false" />
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -65,30 +65,30 @@
             android:layout_width="30sp"
             android:layout_height="30sp"
             android:id="@+id/button_prev"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:src="@drawable/ic_skip_previous_black"
             android:background="#00000000"
             android:scaleType="fitXY"
+            android:contentDescription="@string/title_prev"
             />
         <ImageButton
             android:layout_width="30sp"
             android:layout_height="30sp"
             android:id="@+id/button_play_pause"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_play_arrow_black"
             android:background="#00000000"
             android:scaleType="fitXY"
-            />
+            android:contentDescription="@string/title_play"
+            android:src="@drawable/ic_play_arrow_black" />
         <ImageButton
             android:layout_width="30sp"
             android:layout_height="30sp"
             android:id="@+id/button_next"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:src="@drawable/ic_skip_next_black"
             android:background="#00000000"
             android:scaleType="fitXY"
+            android:contentDescription="@string/title_next"
             />
     </RelativeLayout>
 

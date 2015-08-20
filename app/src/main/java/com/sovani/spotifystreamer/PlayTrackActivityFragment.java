@@ -83,17 +83,9 @@ public class PlayTrackActivityFragment extends Fragment {
         playPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isPlaying)
-                {
-                    isPlaying = false;
-                    pauseTrack();
-                }else {
-                    isPlaying = true;
-                    playTrack();
-                }
+                playPause();
             }
         });
-
 
 
         if ( (trackList != null) && (trackList.size()>position)) {
@@ -120,7 +112,7 @@ public class PlayTrackActivityFragment extends Fragment {
                             seekBar.setProgress(0);
                         }
                     }
-                    mHandler.postDelayed(this, 1000);
+                    mHandler.postDelayed(this, 100);
                 }
             });
         }
@@ -178,12 +170,12 @@ public class PlayTrackActivityFragment extends Fragment {
             selectedTrackList.add(trackList.get(position));
             ((PlayTrackActivity) getActivity()).playTracks(selectedTrackList);
             mediaPlayer = ((PlayTrackActivity) getActivity()).getServiceMediaPlayer();
-            if (mediaPlayer==null) {
+            if (mediaPlayer!=null) {
                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
                         seekBar.setProgress(0);
-                        isPlaying = false;
+                        playPause();
                     }
                 });
             }
@@ -191,6 +183,23 @@ public class PlayTrackActivityFragment extends Fragment {
 
 
     }
+
+    private void playPause()
+    {
+        if (isPlaying)
+        {
+            isPlaying = false;
+            pauseTrack();
+            playPauseButton.setImageResource(R.drawable.ic_play_arrow_black);
+            seekBar.setVisibility(View.GONE);
+        }else {
+            isPlaying = true;
+            playTrack();
+            playPauseButton.setImageResource(R.drawable.ic_pause_black);
+            seekBar.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void pauseTrack(){
         ((PlayTrackActivity) getActivity()).pauseTrack();
     }

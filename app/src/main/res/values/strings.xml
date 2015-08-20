@@ -16,6 +16,12 @@
     <string name="title_activity_play_track">PlayTrackActivity</string>
     <string name="hello_world">Hello world!</string>
 
+    <!-- Play tracks related -->
+    <string name="title_play">Play</string>
+    <string name="title_pause">Pause</string>
+    <string name="title_prev">Previous</string>
+    <string name="title_next">Next</string>
+
 
 
 </resources>
