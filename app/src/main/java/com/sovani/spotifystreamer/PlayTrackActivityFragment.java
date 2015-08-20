@@ -110,9 +110,6 @@ public class PlayTrackActivityFragment extends Fragment {
                                 seekBar.setMax(mediaPlayer.getDuration());
                                 int mCurrentPosition = mediaPlayer.getCurrentPosition();
                                 seekBar.setProgress(mCurrentPosition);
-                            } else {
-                                seekBar.setMax(0);
-                                seekBar.setProgress(0);
                             }
                         }
                     } catch (Exception e) {
@@ -132,14 +129,18 @@ public class PlayTrackActivityFragment extends Fragment {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
+                if (mediaPlayer!=null) {
+                    if (mediaPlayer.isPlaying()) mediaPlayer.pause();
 
+                }
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBarParam) {
                 if (mediaPlayer!=null)
                 {
-                    if (mediaPlayer.isPlaying()) mediaPlayer.seekTo(seekBarParam.getProgress());
+                    mediaPlayer.seekTo(seekBarParam.getProgress());
+                    mediaPlayer.start();
                 }
             }
         });
