@@ -1,5 +1,7 @@
 package com.sovani.spotifystreamer;
 
+import android.media.MediaPlayer;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.sovani.spotifystreamer.CentralReader.CentralAPIManager;
@@ -32,8 +35,13 @@ public class PlayTrackActivityFragment extends Fragment {
     private TextView albumTitle;
     private TextView trackName;
     private TextView artistName;
+    private MediaPlayer mediaPlayer;
 
     private ImageView albumCover;
+    private SeekBar seekBar;
+    private Handler mHandler = null;
+
+
 
     public void setTrackList(ArrayList<ParcelableTrack> trackList, int pos) {
         this.trackList = trackList;
@@ -51,6 +59,8 @@ public class PlayTrackActivityFragment extends Fragment {
         albumTitle = (TextView) rootView.findViewById(R.id.album_title);
         trackName = (TextView) rootView.findViewById(R.id.track_title);
         artistName = (TextView) rootView.findViewById(R.id.artist_name);
+
+        seekBar = (SeekBar) rootView.findViewById(R.id.player_seek);
 
         prevButton = (ImageButton) rootView.findViewById(R.id.button_prev);
         prevButton.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +103,28 @@ public class PlayTrackActivityFragment extends Fragment {
             gotoTrack(position);
         }
 
+        if (mHandler == null) {
+            mHandler = new Handler();
+            getActivity().runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (mediaPlayer != null) {
+                        if (mediaPlayer.isPlaying()) {
+                            seekBar.setMax(0);
+                            seekBar.setMax(mediaPlayer.getDuration());
+                            int mCurrentPosition = mediaPlayer.getCurrentPosition();
+                            seekBar.setProgress(mCurrentPosition);
+                        }else {
+                            seekBar.setMax(0);
+                            seekBar.setProgress(0);
+                        }
+                    }
+                    mHandler.postDelayed(this, 1000);
+                }
+            });
+        }
+
         return rootView;
     }
 
@@ -115,6 +147,7 @@ public class PlayTrackActivityFragment extends Fragment {
         {
             playTrack();
         }
+
 
     }
 
@@ -144,13 +177,27 @@ public class PlayTrackActivityFragment extends Fragment {
             ArrayList<ParcelableTrack> selectedTrackList = new ArrayList<ParcelableTrack>();
             selectedTrackList.add(trackList.get(position));
             ((PlayTrackActivity) getActivity()).playTracks(selectedTrackList);
+            mediaPlayer = ((PlayTrackActivity) getActivity()).getServiceMediaPlayer();
+            if (mediaPlayer==null) {
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        seekBar.setProgress(0);
+                        isPlaying = false;
+                    }
+                });
+            }
+
+
+
     }
     private void pauseTrack(){
         ((PlayTrackActivity) getActivity()).pauseTrack();
     }
     private void resumeTrack(){
-        ((PlayTrackActivity) getActivity()).pauseTrack();
+        ((PlayTrackActivity) getActivity()).resumeTrack();
     }
+
 
 
 }

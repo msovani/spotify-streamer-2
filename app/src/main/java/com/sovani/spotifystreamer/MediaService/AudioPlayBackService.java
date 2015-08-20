@@ -41,6 +41,7 @@ public class AudioPlayBackService extends Service {
             });
             mp.prepare();
 
+
             mp.setOnCompletionListener(new OnCompletionListener() {
 
                 @Override
@@ -116,7 +117,7 @@ public class AudioPlayBackService extends Service {
     {
 
         if (mp != null) {
-            if (!mp.isPlaying()) {
+            if (mp.getCurrentPosition()>0) {
                 mp.start();
             }
         }
@@ -149,6 +150,10 @@ public class AudioPlayBackService extends Service {
             // Return this instance of LocalService so clients can call public methods
             return AudioPlayBackService.this;
         }
+    }
+
+    public MediaPlayer getMediaPlayer(){
+        return mp;
     }
 
 }

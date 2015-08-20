@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -151,6 +152,14 @@ public class PlayTrackActivity extends AppCompatActivity {
         if (maudioPlayBackService != null){
             maudioPlayBackService.resumePlayer();
         }
+    }
+
+    public MediaPlayer getServiceMediaPlayer(){
+        MediaPlayer mediaPlayer = null;
+        if (maudioPlayBackService != null){
+            mediaPlayer = maudioPlayBackService.getMediaPlayer();
+        }
+        return mediaPlayer;
     }
 
 }
