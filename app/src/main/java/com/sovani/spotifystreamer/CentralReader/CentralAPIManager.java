@@ -1,5 +1,7 @@
 package com.sovani.spotifystreamer.CentralReader;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -33,13 +35,20 @@ public class CentralAPIManager {
         return results;
     }
 
-    public static Tracks getTopTenTracks (String spotifyID)
+    public static Tracks getTopTenTracks (String spotifyID, Context context)
     {
 
         Tracks tracks = null;
         try {
             Map<String, Object> query = new HashMap<>();
-            query.put("country", "us");
+
+
+
+            //Try to get country code from preferences. If not, default to US.
+            SharedPreferences preferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+            String countryCode = preferences.getString("COUNTRY_CODE", "US");
+
+            query.put("country", countryCode);
 
             tracks = CentralAPIManager.getService().getArtistTopTrack(spotifyID, query);
 

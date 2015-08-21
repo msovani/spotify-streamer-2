@@ -22,6 +22,8 @@
     <string name="title_prev">Previous</string>
     <string name="title_next">Next</string>
 
+    <!-- Country Search Related -->
+    <string name="title_select_country">Select Country</string>
 
 
 </resources>

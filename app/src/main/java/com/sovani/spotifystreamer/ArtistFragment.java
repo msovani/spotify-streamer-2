@@ -223,7 +223,7 @@ public class ArtistFragment extends Fragment  {
             Tracks tracks = null;
             if (params.length >0) {
                 artist = params[0];
-                tracks = CentralAPIManager.getTopTenTracks(artist.getId());
+                tracks = CentralAPIManager.getTopTenTracks(artist.getId(), getActivity());
             }
             if(tracks != null) {
                 Log.d("MainScreen", tracks.toString());
@@ -233,6 +233,13 @@ public class ArtistFragment extends Fragment  {
         }
         protected void onPostExecute(Tracks tracks)
         {
+            if (tracks == null)
+            {
+                searchDisplay.setText(getResources().getText(R.string.error_no_tracks));
+                showToast(getResources().getString(R.string.error_no_tracks));
+                return;
+            }
+
             if (tracks.tracks.size()==0)
             {
                 //We do not have any tracks, we need to show message and exit.

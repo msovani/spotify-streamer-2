@@ -1,11 +1,17 @@
 package com.sovani.spotifystreamer;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
@@ -90,6 +96,33 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Log.d("MainActivity", "onOptionsItemSelected ");
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.title_select_country);
+                Object[] sArray = {"US - USA", "GB - England", "ES - Spain", "FR - France"};
+                final ArrayAdapter adp = new ArrayAdapter(this, android.R.layout.simple_list_item_1, sArray);
+                builder.setAdapter(adp, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String selectedCountryString = (String) adp.getItem(which);
+                        Log.d("Pref", "onClick " + adp.getItem(which));
+
+                        String[] countryParts = selectedCountryString.split(" ");
+
+                        if (countryParts.length >0) {
+                            SharedPreferences preferences = getApplicationContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("COUNTRY_CODE", countryParts[0]);
+                            editor.apply();
+                        }
+
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+            }
             return true;
         }
 
