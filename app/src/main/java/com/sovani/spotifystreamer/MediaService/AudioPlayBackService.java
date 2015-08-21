@@ -37,7 +37,7 @@ public class AudioPlayBackService extends Service {
 
                 }
             });
-            mp.prepare();
+            mp.prepareAsync();
 
 
 

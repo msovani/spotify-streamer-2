@@ -21,6 +21,7 @@
     <string name="title_pause">Pause</string>
     <string name="title_prev">Previous</string>
     <string name="title_next">Next</string>
+    <string name="duration_title">%1$d Sec</string>
 
     <!-- Country Search Related -->
     <string name="title_select_country">Select Country</string>

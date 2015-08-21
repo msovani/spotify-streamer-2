@@ -120,15 +120,6 @@ public class PlayTrackActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mConnection != null){
-            unbindService(mConnection);
-        }
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
         if (mConnection != null) {
             try {
                 unbindService(mConnection);
@@ -137,6 +128,13 @@ public class PlayTrackActivity extends AppCompatActivity {
                 Log.e("PlayTrack", "error while unbinding service " + e.toString());
             }
         }
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
     }
 
     @Override

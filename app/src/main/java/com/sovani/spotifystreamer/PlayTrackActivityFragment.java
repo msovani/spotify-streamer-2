@@ -40,6 +40,9 @@ public class PlayTrackActivityFragment extends Fragment {
     private Handler mHandler = null;
     private Runnable statusUpdater = null;
 
+    private TextView currPos;
+    private TextView maxPos;
+
 
 
     public void setTrackList(ArrayList<ParcelableTrack> trackList, int pos) {
@@ -68,6 +71,12 @@ public class PlayTrackActivityFragment extends Fragment {
                 goPrevious();
             }
         });
+
+
+        currPos = (TextView) rootView.findViewById(R.id.txt_current_position);
+        maxPos = (TextView) rootView.findViewById(R.id.txt_max_position);
+
+
 
 
         nextButton = (ImageButton) rootView.findViewById(R.id.button_next);
@@ -108,8 +117,10 @@ public class PlayTrackActivityFragment extends Fragment {
                             if (mediaPlayer.isPlaying()) {
                                 seekBar.setMax(0);
                                 seekBar.setMax(mediaPlayer.getDuration());
+                                if (maxPos != null) maxPos.setText(getResources().getString(R.string.duration_title, mediaPlayer.getDuration() / 1000));
                                 int mCurrentPosition = mediaPlayer.getCurrentPosition();
                                 seekBar.setProgress(mCurrentPosition);
+                                if (currPos != null) currPos.setText(getResources().getString(R.string.duration_title, mediaPlayer.getCurrentPosition() / 1000));
                             }
                         }
                     } catch (Exception e) {
@@ -131,6 +142,7 @@ public class PlayTrackActivityFragment extends Fragment {
             public void onStartTrackingTouch(SeekBar seekBar) {
                 if (mediaPlayer!=null) {
                     if (mediaPlayer.isPlaying()) mediaPlayer.pause();
+                    if (currPos != null) currPos.setText(getResources().getString(R.string.duration_title, mediaPlayer.getCurrentPosition() / 1000));
 
                 }
             }
