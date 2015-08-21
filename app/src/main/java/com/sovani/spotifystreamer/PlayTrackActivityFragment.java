@@ -43,7 +43,16 @@ public class PlayTrackActivityFragment extends Fragment {
     private TextView currPos;
     private TextView maxPos;
 
+    private TrackServiceBridgeCommander trackServiceBridgeCommander;
 
+
+    public TrackServiceBridgeCommander getTrackServiceBridgeCommander() {
+        return trackServiceBridgeCommander;
+    }
+
+    public void setTrackServiceBridgeCommander(TrackServiceBridgeCommander trackServiceBridgeCommander) {
+        this.trackServiceBridgeCommander = trackServiceBridgeCommander;
+    }
 
     public void setTrackList(ArrayList<ParcelableTrack> trackList, int pos) {
         this.trackList = trackList;
@@ -95,13 +104,15 @@ public class PlayTrackActivityFragment extends Fragment {
             }
         });
 
-        setTrackList(((PlayTrackActivity)getActivity()).getTracks(), ((PlayTrackActivity)getActivity()).getPosition());
+        if (savedInstanceState == null) {
+
+            if (trackServiceBridgeCommander != null) {
+                setTrackList(trackServiceBridgeCommander.getTracks(), trackServiceBridgeCommander.getPosition());
+            }
+        }
 
         if ( (trackList != null) && (trackList.size()>position)) {
              albumCover = (ImageView) rootView.findViewById(R.id.image_track);
-
-
-            gotoTrack(position);
         }
 
         if (mHandler == null) {
@@ -112,7 +123,6 @@ public class PlayTrackActivityFragment extends Fragment {
                 @Override
                 public void run() {
                     try {
-                        mediaPlayer = ((PlayTrackActivity)getActivity()).getServiceMediaPlayer();
                         if (mediaPlayer != null) {
                             if (mediaPlayer.isPlaying()) {
                                 seekBar.setMax(0);
@@ -157,13 +167,17 @@ public class PlayTrackActivityFragment extends Fragment {
             }
         });
 
-        gotoTrack(position);
+        if (savedInstanceState == null) {
+            gotoTrack(position);
+        }else {
+            showTrack(position);
+        }
+
 
         return rootView;
     }
 
-    private void gotoTrack(int trackNumber)
-    {
+    private void showTrack(int trackNumber) {
         ParcelableTrack track = trackList.get(trackNumber);
 
         albumTitle.setText(track.getAlbumName());
@@ -177,9 +191,20 @@ public class PlayTrackActivityFragment extends Fragment {
         } else {
             Picasso.with(getActivity()).load(getResources().getResourceName(R.drawable.spotify_placeholder));
         }
-        if (isPlaying)
+    }
+
+    private void gotoTrack(int trackNumber)
+    {
+        showTrack(trackNumber);
+        if (mediaPlayer != null) {
+            if (mediaPlayer.isPlaying()) {
+                playTrack();
+            }
+        }
+
+        if (trackServiceBridgeCommander != null)
         {
-            playTrack();
+            trackServiceBridgeCommander.setPosition(trackNumber);
         }
 
 
@@ -208,11 +233,12 @@ public class PlayTrackActivityFragment extends Fragment {
     }
 
     private void playTrack(){
+        if (trackServiceBridgeCommander != null) {
             ArrayList<ParcelableTrack> selectedTrackList = new ArrayList<>();
             selectedTrackList.add(trackList.get(position));
-            ((PlayTrackActivity) getActivity()).playTracks(selectedTrackList);
-            mediaPlayer = ((PlayTrackActivity) getActivity()).getServiceMediaPlayer();
-            if (mediaPlayer!=null) {
+            trackServiceBridgeCommander.playTracks(selectedTrackList);
+            mediaPlayer = trackServiceBridgeCommander.getServiceMediaPlayer();
+            if (mediaPlayer != null) {
                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
@@ -222,18 +248,24 @@ public class PlayTrackActivityFragment extends Fragment {
                 });
             }
 
-
+        }
 
     }
 
-    private void playPause()
+    public void playPause()
     {
+        if (mediaPlayer == null)
+        {
+            isPlaying = false;
+        }
         if (isPlaying)
         {
             isPlaying = false;
             pauseTrack();
             playPauseButton.setImageResource(R.drawable.ic_play_arrow_black);
             seekBar.setVisibility(View.INVISIBLE);
+            currPos.setVisibility(View.INVISIBLE);
+            maxPos.setVisibility(View.INVISIBLE);
         }else {
             isPlaying = true;
             if (mediaPlayer!= null)
@@ -244,19 +276,18 @@ public class PlayTrackActivityFragment extends Fragment {
             }
             playPauseButton.setImageResource(R.drawable.ic_pause_black);
             seekBar.setVisibility(View.VISIBLE);
+            currPos.setVisibility(View.VISIBLE);
+            maxPos.setVisibility(View.VISIBLE);
+
         }
     }
 
     private void pauseTrack(){
-        if (getActivity()!= null) {
-            ((PlayTrackActivity) getActivity()).pauseTrack();
+        if (mediaPlayer != null) {
+            mediaPlayer.pause();
         }
     }
-    private void resumeTrack(){
-        if (getActivity()!= null){
-            ((PlayTrackActivity) getActivity()).resumeTrack();
-        }
-    }
+
 
     @Override
     public void onDestroy() {
@@ -266,5 +297,21 @@ public class PlayTrackActivityFragment extends Fragment {
         }
         super.onDestroy();
 
+    }
+
+    public void setMediaPlayer(MediaPlayer mediaPlayer) {
+        this.mediaPlayer = mediaPlayer;
+    }
+
+    public interface TrackServiceBridgeCommander {
+        public MediaPlayer getServiceMediaPlayer();
+
+        public ArrayList<ParcelableTrack> getTracks();
+
+        public int getPosition();
+
+        public void setPosition(int pos);
+
+        public void playTracks(ArrayList<ParcelableTrack> trackList);
     }
 }
