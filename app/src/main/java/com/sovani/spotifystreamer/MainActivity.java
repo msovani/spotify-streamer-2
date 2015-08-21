@@ -1,10 +1,14 @@
 package com.sovani.spotifystreamer;
 
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,20 +18,35 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
-public class MainActivity extends AppCompatActivity {
+import com.sovani.spotifystreamer.model.ParcelableTrack;
+
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements ArtistFragment.TrackListSelectedResultsHandler {
 
     private EditText artistName;
     private ArtistFragment artistFragment;
+    private boolean mTabletMode;
+    TopTenFragment topTenFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         artistName = (EditText) findViewById(R.id.artist_name);
+
+        if (findViewById(R.id.dynamic_fragment_container) != null)
+        {
+            mTabletMode = true;
+        }else{
+            mTabletMode = false;
+        }
+
         if (savedInstanceState==null)
         {
 
             artistFragment = new ArtistFragment();
+            artistFragment.setTrackListSelectedResultsHandler(this);
 
             getSupportFragmentManager()
                     .beginTransaction()
@@ -37,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
 
             artistFragment = (ArtistFragment) getSupportFragmentManager().findFragmentByTag("ARTIST_FRAGMENT_TAG");
+            artistFragment.setTrackListSelectedResultsHandler(this);
 
             String searchTerm = savedInstanceState.getString("SEARCH_TERM");
             if (searchTerm != null) {
@@ -129,5 +149,24 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onTrackListSelected(String artist, ArrayList<ParcelableTrack> listOfTracks) {
 
+        if (mTabletMode == false) {
+            Intent topTenIntent = new Intent(MainActivity.this, TopTenActivity.class);
+            topTenIntent.putExtra("ARTIST_NAME", artist);
+            topTenIntent.putParcelableArrayListExtra("TRACK_LIST", listOfTracks);
+            MainActivity.this.startActivity(topTenIntent);
+        }else{
+            topTenFragment = new TopTenFragment();
+
+
+            if (listOfTracks != null) {
+                topTenFragment.setTrackList(listOfTracks);
+            }
+            getSupportFragmentManager().beginTransaction().replace(
+                    R.id.dynamic_fragment_container, topTenFragment, "TOP_TEN_FRAGMENT_TAG").commit();
+
+        }
+    }
 }

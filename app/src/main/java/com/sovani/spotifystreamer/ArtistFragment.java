@@ -41,7 +41,15 @@ public class ArtistFragment extends Fragment  {
     private RetrieveCentralFeed rcf;
     private RetrieveTracks rt;
     private ArrayList<ParcelableTrack> trackList;
+    private TrackListSelectedResultsHandler trackListSelectedResultsHandler;
 
+    public TrackListSelectedResultsHandler getTrackListSelectedResultsHandler() {
+        return trackListSelectedResultsHandler;
+    }
+
+    public void setTrackListSelectedResultsHandler(TrackListSelectedResultsHandler trackListSelectedResultsHandler) {
+        this.trackListSelectedResultsHandler = trackListSelectedResultsHandler;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance)
@@ -68,7 +76,7 @@ public class ArtistFragment extends Fragment  {
                             rt.cancel(true);
                         }
                     }
-                    rt = new RetrieveTracks();
+                    rt = new RetrieveTracks(ArtistFragment.this);
                     rt.execute(artist);
                 }else{
                     searchDisplay.setText(getResources().getText(R.string.error_no_network));
@@ -219,6 +227,13 @@ public class ArtistFragment extends Fragment  {
     class RetrieveTracks extends AsyncTask<ParcelableArtist, Void, Tracks>
     {
         ParcelableArtist artist;
+        public ArtistFragment fragment;
+
+        public RetrieveTracks(ArtistFragment fragmentParam)
+        {
+            this.fragment = fragmentParam;
+        }
+
         protected Tracks doInBackground(ParcelableArtist... params){
             Tracks tracks = null;
             if (params.length >0) {
@@ -282,10 +297,9 @@ public class ArtistFragment extends Fragment  {
                 searchDisplay.setText("");
 
                 //We have found tracks, hence we can now start the top10 activity
-                Intent topTenIntent = new Intent(getActivity(), TopTenActivity.class);
-                topTenIntent.putExtra("ARTIST_NAME", artist.getArtistName());
-                topTenIntent.putParcelableArrayListExtra("TRACK_LIST", trackList);
-                getActivity().startActivity(topTenIntent);
+                if (fragment.getTrackListSelectedResultsHandler() != null) {
+                    fragment.getTrackListSelectedResultsHandler().onTrackListSelected(artist.getArtistName(), trackList);
+                }
 
             }
         }
@@ -306,5 +320,8 @@ public class ArtistFragment extends Fragment  {
                 Toast.LENGTH_SHORT).show();
     }
 
+    public interface TrackListSelectedResultsHandler {
+        public void onTrackListSelected(String artist, ArrayList<ParcelableTrack> listOfTracks);
+    }
 
 }
