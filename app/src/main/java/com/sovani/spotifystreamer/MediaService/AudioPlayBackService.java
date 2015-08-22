@@ -25,13 +25,15 @@ public class AudioPlayBackService extends Service {
     private String[] tracks = {
 
     };
+
+    private String track;
     private int currentTrack = 0;
 
 
 
     private void playTracks(){
         try {
-            Uri file = Uri.parse(tracks[this.currentTrack]);
+            Uri file = Uri.parse(track);
             if (mp == null ) {
                 mp = new MediaPlayer();
             }else{
@@ -81,9 +83,9 @@ public class AudioPlayBackService extends Service {
         return Service.START_STICKY_COMPATIBILITY;
     }
 
-    public void setTracks(String[] passedTracks)
+    public void setTracks(String passedTrack)
     {
-        tracks = passedTracks;
+        track = passedTrack;
         if (mp != null) {
             if (mp.isPlaying()) {
                 mp.stop();

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.sovani.spotifystreamer.CentralReader.CentralAPIManager;
 import com.sovani.spotifystreamer.model.ParcelableTrack;
 import com.squareup.picasso.Picasso;
 
@@ -154,7 +155,13 @@ public class PlayTrackActivityFragment extends Fragment {
 
     @Override
     public void onStart() {
-//        startMusicService(true, trackList.get(position));
+
+        if (CentralAPIManager.getInstance().getMaudioPlayBackService(getActivity().getApplicationContext()).getMediaPlayer() != null)
+        {
+            mediaPlayer = CentralAPIManager.getInstance().getMaudioPlayBackService(getActivity().getApplicationContext()).getMediaPlayer();
+            isPlaying = mediaPlayer.isPlaying();
+        }
+
         if (mHandler == null) {
             mHandler = new Handler();
 
@@ -172,6 +179,7 @@ public class PlayTrackActivityFragment extends Fragment {
                                 seekBar.setProgress(mCurrentPosition);
                                 if (currPos != null) currPos.setText(getResources().getString(R.string.duration_title, mediaPlayer.getCurrentPosition() / 1000));
                             }
+                            refreshControls();
                         }
                     } catch (Exception e) {
                         Log.e("PlayFragment", "Exception during progress update thread" + e.toString());
@@ -242,16 +250,22 @@ public class PlayTrackActivityFragment extends Fragment {
 
     private void playTrack(){
         if (trackServiceBridgeCommander != null) {
-            ArrayList<ParcelableTrack> selectedTrackList = new ArrayList<>();
-            selectedTrackList.add(trackList.get(position));
-            trackServiceBridgeCommander.playTracks(selectedTrackList);
-            mediaPlayer = trackServiceBridgeCommander.getServiceMediaPlayer();
+
+            CentralAPIManager.getInstance().getMaudioPlayBackService(getActivity().getApplicationContext()).setTracks(trackList.get(position).getPreviewURL());
+            mediaPlayer = CentralAPIManager.getInstance().getMaudioPlayBackService(getActivity().getApplicationContext()).getMediaPlayer();
             if (mediaPlayer != null) {
                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
                         seekBar.setProgress(0);
                         refreshControls();
+                    }
+                });
+                mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                    @Override
+                    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                        refreshControls();
+                        return false;
                     }
                 });
             }
@@ -320,6 +334,7 @@ public class PlayTrackActivityFragment extends Fragment {
         if ((mHandler != null) && (statusUpdater != null))
         {
             mHandler.removeCallbacks(statusUpdater);
+            mHandler = null;
         }
         super.onDestroy();
 

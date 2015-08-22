@@ -64,6 +64,8 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
             getSupportFragmentManager().beginTransaction().replace(
                     android.R.id.content, fragment, "PLAY_TRACK").commit();
 
+            CentralAPIManager.getInstance().getMaudioPlayBackService(getApplicationContext()).setTracks(tracks.get(position).getPreviewURL());
+
         }else{
 
             setPosition(savedInstanceState.getInt("SAVED_TRACK_POSITION", 0));
@@ -127,11 +129,6 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
         super.onBackPressed();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
 
 
     public void playTracks(ArrayList<ParcelableTrack> trackList){
@@ -145,7 +142,7 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
                 tracks[i] =   track.getPreviewURL();
                 i++;
             }
-            maudioPlayBackService.setTracks(tracks);
+//            maudioPlayBackService.setTracks(tracks);
         }
     }
 
