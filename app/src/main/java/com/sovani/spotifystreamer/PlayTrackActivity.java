@@ -14,18 +14,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.sovani.spotifystreamer.MediaService.AudioPlayBackService;
+import com.sovani.spotifystreamer.CentralReader.CentralAPIManager;
 import com.sovani.spotifystreamer.model.ParcelableTrack;
 
 import java.util.ArrayList;
 
 public class PlayTrackActivity extends AppCompatActivity implements PlayTrackActivityFragment.TrackServiceBridgeCommander {
-    private boolean mBound;
 
 
-    private AudioPlayBackService maudioPlayBackService;
-    private AudioPlayBackService.LocalBinder binder;
+
     private ArrayList<ParcelableTrack> tracks = null;
     private int position = 0;
+
+    AudioPlayBackService maudioPlayBackService;
 
     private PlayTrackActivityFragment fragment;
 
@@ -41,46 +42,19 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
         return tracks;
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            binder = (AudioPlayBackService.LocalBinder) service;
-            maudioPlayBackService = binder.getService();
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-        // This is called when the connection with the service has been
-        // unexpectedly disconnected -- that is, its process crashed.
-        maudioPlayBackService = null;
-        }
-    };
+    private ServiceConnection mConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tracks = this.getIntent().getParcelableArrayListExtra("TRACK_LIST");
 
-
+        maudioPlayBackService = CentralAPIManager.getInstance().getMaudioPlayBackService(getApplicationContext());
 
         if (savedInstanceState == null) {
             setPosition(this.getIntent().getIntExtra("TRACK_POSITION", 0));
 
-            mConnection = new ServiceConnection() {
-                public void onServiceConnected(ComponentName className, IBinder service) {
-                    binder = (AudioPlayBackService.LocalBinder) service;
-                    maudioPlayBackService = binder.getService();
-                }
 
-                public void onServiceDisconnected(ComponentName className) {
-                    // This is called when the connection with the service has been
-                    // unexpectedly disconnected -- that is, its process crashed.
-                    maudioPlayBackService = null;
-                }
-            };
-
-            if (mConnection != null) {
-                Intent startIntent = new Intent(getApplicationContext(), AudioPlayBackService.class);
-                mBound = bindService(startIntent, mConnection, Context.BIND_AUTO_CREATE);
-            }
             fragment = new PlayTrackActivityFragment();
             if (tracks != null) {
                 fragment.setTrackList(tracks, position );
@@ -93,11 +67,7 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
         }else{
 
             setPosition(savedInstanceState.getInt("SAVED_TRACK_POSITION", 0));
-            binder = (AudioPlayBackService.LocalBinder) savedInstanceState.getBinder("AUDIO_BINDER");
 
-            if (binder != null) {
-                maudioPlayBackService = binder.getService();
-            }
 
 
             fragment  = (PlayTrackActivityFragment) getSupportFragmentManager().findFragmentByTag("PLAY_TRACK");
@@ -121,10 +91,6 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (binder != null)
-        {
-            outState.putBinder("AUDIO_BINDER", binder);
-        }
 
         outState.putInt("SAVED_TRACK_POSITION", position);
         super.onSaveInstanceState(outState);
@@ -154,15 +120,10 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
 
     @Override
     public void onBackPressed() {
-        if (mConnection != null) {
-            try {
-                unbindService(mConnection);
-            }catch (Exception e)
-            {
-                Log.e("PlayTrack", "error while unbinding service " + e.toString());
-            }
+        if (maudioPlayBackService!= null)
+        {
+            maudioPlayBackService.getMediaPlayer().stop();
         }
-
         super.onBackPressed();
     }
 
@@ -172,18 +133,6 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
 
     }
 
-    @Override
-    protected void onDestroy() {
-        if (mConnection != null) {
-            try {
-                unbindService(mConnection);
-            }catch (Exception e)
-            {
-                Log.e("PlayTrack", "error while unbinding service " + e.toString());
-            }
-        }
-        super.onDestroy();
-    }
 
     public void playTracks(ArrayList<ParcelableTrack> trackList){
 
@@ -199,21 +148,7 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
             maudioPlayBackService.setTracks(tracks);
         }
     }
-    public void pauseTrack()
-    {
 
-        if (maudioPlayBackService != null){
-            maudioPlayBackService.pausePlayer();
-        }
-    }
-
-    public void resumeTrack()
-    {
-
-        if (maudioPlayBackService != null){
-            maudioPlayBackService.resumePlayer();
-        }
-    }
 
     public MediaPlayer getServiceMediaPlayer(){
         MediaPlayer mediaPlayer = null;

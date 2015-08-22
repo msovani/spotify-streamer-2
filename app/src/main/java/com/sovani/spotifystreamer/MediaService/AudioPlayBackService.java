@@ -1,5 +1,9 @@
 package com.sovani.spotifystreamer.MediaService;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -8,10 +12,16 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.Calendar;
+
+
 public class AudioPlayBackService extends Service {
 
     private static final String DEBUG_TAG = "AudioPBService";
     private MediaPlayer mp;
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
+
     private String[] tracks = {
 
     };
@@ -34,7 +44,6 @@ public class AudioPlayBackService extends Service {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     mediaPlayer.start();
-
                 }
             });
             mp.prepareAsync();
@@ -57,6 +66,10 @@ public class AudioPlayBackService extends Service {
         Log.d(DEBUG_TAG, "In onDestroy.");
         if(mp != null) {
             mp.stop();
+        }
+        // If the alarm has been set, cancel it.
+        if (alarmMgr!= null) {
+            alarmMgr.cancel(alarmIntent);
         }
     }
 

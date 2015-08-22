@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
+import com.sovani.spotifystreamer.CentralReader.CentralAPIManager;
 import com.sovani.spotifystreamer.model.ParcelableTrack;
 
 import java.util.ArrayList;
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
         }else{
             mTabletMode = false;
         }
+
+        //Create the Music Service here
+        CentralAPIManager.getInstance().getMaudioPlayBackService(getApplicationContext());
 
         if (savedInstanceState==null)
         {

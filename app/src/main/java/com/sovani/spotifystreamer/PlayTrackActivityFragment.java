@@ -145,6 +145,7 @@ public class PlayTrackActivityFragment extends Fragment {
             gotoTrack(position);
         }else {
             showTrack(position);
+            refreshControls();
         }
 
 
@@ -250,7 +251,7 @@ public class PlayTrackActivityFragment extends Fragment {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
                         seekBar.setProgress(0);
-                        playPause();
+                        refreshControls();
                     }
                 });
             }
@@ -264,15 +265,15 @@ public class PlayTrackActivityFragment extends Fragment {
         if (mediaPlayer == null)
         {
             isPlaying = false;
+        }else{
+            isPlaying = mediaPlayer.isPlaying();
         }
+
         if (isPlaying)
         {
             isPlaying = false;
             pauseTrack();
-            playPauseButton.setImageResource(android.R.drawable.ic_media_play);
-            seekBar.setVisibility(View.INVISIBLE);
-            currPos.setVisibility(View.INVISIBLE);
-            maxPos.setVisibility(View.INVISIBLE);
+
         }else {
             isPlaying = true;
             if (mediaPlayer!= null)
@@ -281,11 +282,29 @@ public class PlayTrackActivityFragment extends Fragment {
             }else {
                 playTrack();
             }
+
+        }
+        refreshControls();
+    }
+
+    private void refreshControls(){
+        if (mediaPlayer == null)
+        {
+            isPlaying = false;
+        }else{
+            isPlaying = mediaPlayer.isPlaying();
+        }
+        if (isPlaying)
+        {
             playPauseButton.setImageResource(android.R.drawable.ic_media_pause);
             seekBar.setVisibility(View.VISIBLE);
             currPos.setVisibility(View.VISIBLE);
             maxPos.setVisibility(View.VISIBLE);
-
+        }else {
+            playPauseButton.setImageResource(android.R.drawable.ic_media_play);
+            seekBar.setVisibility(View.INVISIBLE);
+            currPos.setVisibility(View.INVISIBLE);
+            maxPos.setVisibility(View.INVISIBLE);
         }
     }
 
