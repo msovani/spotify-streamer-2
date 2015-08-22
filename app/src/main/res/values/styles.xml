@@ -5,4 +5,11 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="AlbumSelection">
+        <item name="android:choiceMode">none</item>
+    </style>
+    <style name="TrackSelection">
+        <item name="android:choiceMode">none</item>
+    </style>
+
 </resources>

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 public class TopTenFragment extends Fragment {
 
     private ArrayList<ParcelableTrack> trackList;
+    private int selectedPos;
 
     public void setTrackList(ArrayList<ParcelableTrack> trackList) {
         this.trackList = trackList;
@@ -41,6 +42,7 @@ public class TopTenFragment extends Fragment {
 
         if (savedInstance != null ) {
             trackList = savedInstance.getParcelableArrayList("TOP_TEN_RESULTS");
+            selectedPos = savedInstance.getInt("SELECTED_POS", -1);
         }
         trackListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -53,16 +55,22 @@ public class TopTenFragment extends Fragment {
                 trackIntent.putParcelableArrayListExtra("TRACK_LIST", trackList);
                 trackIntent.putExtra("TRACK_POSITION", position);
                 getActivity().startActivity(trackIntent);
+                view.setSelected(true);
+                selectedPos = position;
             }
         });
 
         return fragmentView;
     }
 
+    
+
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("TOP_TEN_RESULTS", trackList);
+        outState.putInt("SELECTED_POS", selectedPos);
 
     }
 

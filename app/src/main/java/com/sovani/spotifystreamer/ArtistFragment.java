@@ -41,6 +41,7 @@ public class ArtistFragment extends Fragment  {
     private RetrieveTracks rt;
     private ArrayList<ParcelableTrack> trackList;
     private TrackListSelectedResultsHandler trackListSelectedResultsHandler;
+    private int selectedPos;
 
     public TrackListSelectedResultsHandler getTrackListSelectedResultsHandler() {
         return trackListSelectedResultsHandler;
@@ -58,6 +59,7 @@ public class ArtistFragment extends Fragment  {
 
         if ((savedInstance != null ) && (savedInstance.containsKey("ARTIST_LIST"))){
             artistList = savedInstance.getParcelableArrayList("ARTIST_LIST");
+            selectedPos = savedInstance.getInt("SELECTED_POS", -1);
         }
 
         ListView artistListView = (ListView) fragmentView.findViewById(R.id.artist_list);
@@ -81,6 +83,8 @@ public class ArtistFragment extends Fragment  {
                     searchDisplay.setText(getResources().getText(R.string.error_no_network));
                     showToast(getResources().getText(R.string.error_no_network).toString());
                 }
+                view.setSelected(true);
+                selectedPos = position;
 
             }
         });
@@ -88,10 +92,12 @@ public class ArtistFragment extends Fragment  {
         return fragmentView;
     }
 
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("ARTIST_LIST", artistList);
+        outState.putInt("SELECTED_POS", selectedPos);
 
     }
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AlbumSelection">
+        <item name="android:choiceMode">singleChoice</item>
+       <item name="android:background">@drawable/artist_touch_selector</item>
+    </style>
+    <style name="TrackSelection">
+        <item name="android:choiceMode">singleChoice</item>
+        <item name="android:background">@drawable/track_touch_selector</item>
+    </style>
+</resources>
