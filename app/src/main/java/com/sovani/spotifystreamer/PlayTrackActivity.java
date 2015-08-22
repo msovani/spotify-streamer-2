@@ -20,7 +20,8 @@ import java.util.ArrayList;
 
 public class PlayTrackActivity extends AppCompatActivity implements PlayTrackActivityFragment.TrackServiceBridgeCommander {
     private boolean mBound;
-    private ServiceConnection mConnection;
+
+
     AudioPlayBackService maudioPlayBackService;
     AudioPlayBackService.LocalBinder binder;
     private ArrayList<ParcelableTrack> tracks = null;
@@ -40,6 +41,18 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
         return tracks;
     }
 
+    private ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            binder = (AudioPlayBackService.LocalBinder) service;
+            maudioPlayBackService = binder.getService();
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+        // This is called when the connection with the service has been
+        // unexpectedly disconnected -- that is, its process crashed.
+        maudioPlayBackService = null;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +63,7 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
 
         if (savedInstanceState == null) {
             setPosition(this.getIntent().getIntExtra("TRACK_POSITION", 0));
+
             mConnection = new ServiceConnection() {
                 public void onServiceConnected(ComponentName className, IBinder service) {
                     binder = (AudioPlayBackService.LocalBinder) service;
@@ -77,8 +91,10 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
                     android.R.id.content, fragment, "PLAY_TRACK").commit();
 
         }else{
+
             setPosition(savedInstanceState.getInt("SAVED_TRACK_POSITION", 0));
             binder = (AudioPlayBackService.LocalBinder) savedInstanceState.getBinder("AUDIO_BINDER");
+
             if (binder != null) {
                 maudioPlayBackService = binder.getService();
             }
@@ -158,7 +174,14 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
 
     @Override
     protected void onDestroy() {
-
+        if (mConnection != null) {
+            try {
+                unbindService(mConnection);
+            }catch (Exception e)
+            {
+                Log.e("PlayTrack", "error while unbinding service " + e.toString());
+            }
+        }
         super.onDestroy();
     }
 

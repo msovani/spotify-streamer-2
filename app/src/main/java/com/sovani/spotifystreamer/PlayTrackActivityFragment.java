@@ -115,32 +115,6 @@ public class PlayTrackActivityFragment extends Fragment {
              albumCover = (ImageView) rootView.findViewById(R.id.image_track);
         }
 
-        if (mHandler == null) {
-            mHandler = new Handler();
-
-            statusUpdater = new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        if (mediaPlayer != null) {
-                            if (mediaPlayer.isPlaying()) {
-                                seekBar.setMax(0);
-                                seekBar.setMax(mediaPlayer.getDuration());
-                                if (maxPos != null) maxPos.setText(getResources().getString(R.string.duration_title, mediaPlayer.getDuration() / 1000));
-                                int mCurrentPosition = mediaPlayer.getCurrentPosition();
-                                seekBar.setProgress(mCurrentPosition);
-                                if (currPos != null) currPos.setText(getResources().getString(R.string.duration_title, mediaPlayer.getCurrentPosition() / 1000));
-                            }
-                        }
-                    } catch (Exception e) {
-                        Log.e("PlayFragment", "Exception during progress update thread" + e.toString());
-                    }
-                    mHandler.postDelayed(this, 100);
-                }
-            };
-            getActivity().runOnUiThread(statusUpdater);
-        }
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -175,6 +149,39 @@ public class PlayTrackActivityFragment extends Fragment {
 
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+//        startMusicService(true, trackList.get(position));
+        if (mHandler == null) {
+            mHandler = new Handler();
+
+            statusUpdater = new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        if (mediaPlayer != null) {
+                            if (mediaPlayer.isPlaying()) {
+                                seekBar.setMax(0);
+                                seekBar.setMax(mediaPlayer.getDuration());
+                                if (maxPos != null) maxPos.setText(getResources().getString(R.string.duration_title, mediaPlayer.getDuration() / 1000));
+                                int mCurrentPosition = mediaPlayer.getCurrentPosition();
+                                seekBar.setProgress(mCurrentPosition);
+                                if (currPos != null) currPos.setText(getResources().getString(R.string.duration_title, mediaPlayer.getCurrentPosition() / 1000));
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.e("PlayFragment", "Exception during progress update thread" + e.toString());
+                    }
+                    mHandler.postDelayed(this, 100);
+                }
+            };
+            getActivity().runOnUiThread(statusUpdater);
+        }
+
+        super.onStart();
     }
 
     private void showTrack(int trackNumber) {
@@ -314,4 +321,5 @@ public class PlayTrackActivityFragment extends Fragment {
 
         public void playTracks(ArrayList<ParcelableTrack> trackList);
     }
+
 }
