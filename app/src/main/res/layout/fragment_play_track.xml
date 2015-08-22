@@ -13,11 +13,24 @@
         android:layout_weight="0.5"
         android:id="@+id/layout_album_cover"
         >
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/artist_name"
+            android:gravity="center_horizontal"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/album_title"
+            android:layout_below="@id/artist_name"
+            android:gravity="center_horizontal"
+            />
 <ImageView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/image_track"
+    android:layout_below="@id/album_title"
     />
     </RelativeLayout>
     <RelativeLayout
@@ -26,23 +39,14 @@
         android:layout_weight="0.3"
         android:id="@+id/layout_album_details"
         >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/album_title"
-            />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/track_title"
-            android:layout_below="@+id/album_title"
+            android:gravity="center_horizontal"
             />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/artist_name"
-            android:layout_below="@+id/track_title"
-            />
+
 
     </RelativeLayout>
     <RelativeLayout
