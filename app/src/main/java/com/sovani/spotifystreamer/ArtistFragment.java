@@ -43,7 +43,7 @@ public class ArtistFragment extends Fragment  {
     private TrackListSelectedResultsHandler trackListSelectedResultsHandler;
     private int selectedPos;
 
-    public TrackListSelectedResultsHandler getTrackListSelectedResultsHandler() {
+    private TrackListSelectedResultsHandler getTrackListSelectedResultsHandler() {
         return trackListSelectedResultsHandler;
     }
 

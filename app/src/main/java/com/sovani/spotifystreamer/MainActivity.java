@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
     private EditText artistName;
     private ArtistFragment artistFragment;
     private boolean mTabletMode;
-    TopTenFragment topTenFragment;
+    private TopTenFragment topTenFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

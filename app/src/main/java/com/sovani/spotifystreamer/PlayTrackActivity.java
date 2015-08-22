@@ -22,8 +22,8 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
     private boolean mBound;
 
 
-    AudioPlayBackService maudioPlayBackService;
-    AudioPlayBackService.LocalBinder binder;
+    private AudioPlayBackService maudioPlayBackService;
+    private AudioPlayBackService.LocalBinder binder;
     private ArrayList<ParcelableTrack> tracks = null;
     private int position = 0;
 

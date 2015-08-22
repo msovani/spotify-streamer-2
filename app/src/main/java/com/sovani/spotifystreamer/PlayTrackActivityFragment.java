@@ -259,7 +259,7 @@ public class PlayTrackActivityFragment extends Fragment {
 
     }
 
-    public void playPause()
+    private void playPause()
     {
         if (mediaPlayer == null)
         {

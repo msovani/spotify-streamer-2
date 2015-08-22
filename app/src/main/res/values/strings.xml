@@ -14,7 +14,6 @@
     <string name="title_activity_top_ten">Top 10 Tracks</string>
     <string name="error_no_tracks">No tracks found. Please select another artist.</string>
     <string name="title_activity_play_track">PlayTrackActivity</string>
-    <string name="hello_world">Hello world!</string>
 
     <!-- Play tracks related -->
     <string name="title_play">Play</string>
@@ -22,6 +21,7 @@
     <string name="title_prev">Previous</string>
     <string name="title_next">Next</string>
     <string name="duration_title">%1$d Sec</string>
+    <string name="album_cover_description">Album Cover</string>
 
     <!-- Country Search Related -->
     <string name="title_select_country">Select Country</string>

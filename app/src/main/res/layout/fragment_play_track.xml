@@ -31,6 +31,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/image_track"
     android:layout_below="@id/album_title"
+    android:contentDescription="@string/album_cover_description"
     />
     </RelativeLayout>
     <RelativeLayout
