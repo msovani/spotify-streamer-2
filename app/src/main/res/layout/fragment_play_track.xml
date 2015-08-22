@@ -85,7 +85,7 @@
             android:layout_height="30sp"
             android:id="@+id/button_prev"
             android:layout_alignParentStart="true"
-            android:src="@drawable/ic_skip_previous_black"
+            android:src="@android:drawable/ic_media_previous"
             android:background="#00000000"
             android:scaleType="fitXY"
             android:contentDescription="@string/title_prev"
@@ -98,13 +98,14 @@
             android:background="#00000000"
             android:scaleType="fitXY"
             android:contentDescription="@string/title_play"
-            android:src="@drawable/ic_play_arrow_black" />
+            android:src="@android:drawable/ic_media_play"
+            />
         <ImageButton
             android:layout_width="30sp"
             android:layout_height="30sp"
             android:id="@+id/button_next"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_skip_next_black"
+            android:src="@android:drawable/ic_media_next"
             android:background="#00000000"
             android:scaleType="fitXY"
             android:contentDescription="@string/title_next"

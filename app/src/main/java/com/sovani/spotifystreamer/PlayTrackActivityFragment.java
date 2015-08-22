@@ -269,7 +269,7 @@ public class PlayTrackActivityFragment extends Fragment {
         {
             isPlaying = false;
             pauseTrack();
-            playPauseButton.setImageResource(R.drawable.ic_play_arrow_black);
+            playPauseButton.setImageResource(android.R.drawable.ic_media_play);
             seekBar.setVisibility(View.INVISIBLE);
             currPos.setVisibility(View.INVISIBLE);
             maxPos.setVisibility(View.INVISIBLE);
@@ -281,7 +281,7 @@ public class PlayTrackActivityFragment extends Fragment {
             }else {
                 playTrack();
             }
-            playPauseButton.setImageResource(R.drawable.ic_pause_black);
+            playPauseButton.setImageResource(android.R.drawable.ic_media_pause);
             seekBar.setVisibility(View.VISIBLE);
             currPos.setVisibility(View.VISIBLE);
             maxPos.setVisibility(View.VISIBLE);
