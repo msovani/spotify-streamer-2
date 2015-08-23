@@ -233,9 +233,7 @@ public class PlayTrackActivityFragment extends DialogFragment {
     {
         showTrack(trackNumber);
         if (mediaPlayer != null) {
-            if (mediaPlayer.isPlaying()) {
                 playTrack();
-            }
         }
 
         if (trackServiceBridgeCommander != null)
