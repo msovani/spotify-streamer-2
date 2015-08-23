@@ -43,6 +43,7 @@ public class PlayTrackActivityFragment extends DialogFragment {
 
     private TextView currPos;
     private TextView maxPos;
+    private boolean touchinprogress;
 
     private TrackServiceBridgeCommander trackServiceBridgeCommander;
 
@@ -133,7 +134,7 @@ public class PlayTrackActivityFragment extends DialogFragment {
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 if (mediaPlayer!=null) {
-                    if (mediaPlayer.isPlaying()) mediaPlayer.pause();
+                    touchinprogress = true;
                     if (currPos != null) currPos.setText(getResources().getString(R.string.duration_title, mediaPlayer.getCurrentPosition() / 1000));
 
                 }
@@ -141,6 +142,7 @@ public class PlayTrackActivityFragment extends DialogFragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBarParam) {
+                touchinprogress = false;
                 if (mediaPlayer!=null)
                 {
                     mediaPlayer.seekTo(seekBarParam.getProgress());
@@ -192,7 +194,9 @@ public class PlayTrackActivityFragment extends DialogFragment {
                                 seekBar.setMax(mediaPlayer.getDuration());
                                 if (maxPos != null) maxPos.setText(getResources().getString(R.string.duration_title, mediaPlayer.getDuration() / 1000));
                                 int mCurrentPosition = mediaPlayer.getCurrentPosition();
-                                seekBar.setProgress(mCurrentPosition);
+
+                                if (!touchinprogress) seekBar.setProgress(mCurrentPosition);
+
                                 if (currPos != null) currPos.setText(getResources().getString(R.string.duration_title, mediaPlayer.getCurrentPosition() / 1000));
                             }
                             refreshControls();
