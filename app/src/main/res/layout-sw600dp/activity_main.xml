@@ -35,6 +35,14 @@
 
     </RelativeLayout>
     <RelativeLayout
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/background_material_dark"
+        android:id="@+id/thin_vertical_line"
+        >
+
+    </RelativeLayout>
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
