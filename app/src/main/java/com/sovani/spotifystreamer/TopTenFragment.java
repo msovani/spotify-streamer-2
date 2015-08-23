@@ -26,6 +26,15 @@ public class TopTenFragment extends Fragment {
 
     private ArrayList<ParcelableTrack> trackList;
     private int selectedPos;
+    private PlayTrackHandler playTrackHandler;
+
+    public PlayTrackHandler getPlayTrackHandler() {
+        return playTrackHandler;
+    }
+
+    public void setPlayTrackHandler(PlayTrackHandler playTrackHandler) {
+        this.playTrackHandler = playTrackHandler;
+    }
 
     public void setTrackList(ArrayList<ParcelableTrack> trackList) {
         this.trackList = trackList;
@@ -48,13 +57,10 @@ public class TopTenFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("TOP10", "onItemClick " + position);
-                ParcelableTrack track = trackList.get(position);
-                //User has clicked on a track, and we need to play the track
-                Intent trackIntent = new Intent(getActivity(), PlayTrackActivity.class);
-                trackIntent.putExtra("ARTIST_NAME", track.getArtists());
-                trackIntent.putParcelableArrayListExtra("TRACK_LIST", trackList);
-                trackIntent.putExtra("TRACK_POSITION", position);
-                getActivity().startActivity(trackIntent);
+                if (playTrackHandler != null)
+                {
+                    playTrackHandler.onTrackSelected(trackList, position);
+                }
                 view.setSelected(true);
                 selectedPos = position;
             }
@@ -129,6 +135,8 @@ public class TopTenFragment extends Fragment {
         }
     }
 
-
+    public interface PlayTrackHandler {
+        public void onTrackSelected(ArrayList<ParcelableTrack> trackList, int position);
+    }
 
 }

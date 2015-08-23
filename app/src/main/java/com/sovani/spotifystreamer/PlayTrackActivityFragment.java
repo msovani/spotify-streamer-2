@@ -2,7 +2,7 @@ package com.sovani.spotifystreamer;
 
 import android.media.MediaPlayer;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PlayTrackActivityFragment extends Fragment {
+public class PlayTrackActivityFragment extends DialogFragment {
 
 
     private ArrayList<ParcelableTrack> trackList;
@@ -46,6 +46,9 @@ public class PlayTrackActivityFragment extends Fragment {
 
     private TrackServiceBridgeCommander trackServiceBridgeCommander;
 
+    static PlayTrackActivityFragment newInstance() {
+        return new PlayTrackActivityFragment();
+    }
 
     public TrackServiceBridgeCommander getTrackServiceBridgeCommander() {
         return trackServiceBridgeCommander;
@@ -110,6 +113,10 @@ public class PlayTrackActivityFragment extends Fragment {
             if (trackServiceBridgeCommander != null) {
                 setTrackList(trackServiceBridgeCommander.getTracks(), trackServiceBridgeCommander.getPosition());
             }
+        }else {
+            trackList = savedInstanceState.getParcelableArrayList("TOP_TEN_LIST");
+            position = savedInstanceState.getInt("TOP_TEN_POSITION");
+            setTrackList(trackList, position);
         }
 
         if ( (trackList != null) && (trackList.size()>position)) {
@@ -151,6 +158,15 @@ public class PlayTrackActivityFragment extends Fragment {
 
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (trackList != null) {
+            outState.putParcelableArrayList("TOP_TEN_LIST", trackList);
+        }
+        outState.putInt("TOP_TEN_POSITION", position);
     }
 
     @Override
@@ -249,7 +265,6 @@ public class PlayTrackActivityFragment extends Fragment {
     }
 
     private void playTrack(){
-        if (trackServiceBridgeCommander != null) {
 
             CentralAPIManager.getInstance().getMaudioPlayBackService(getActivity().getApplicationContext()).setTracks(trackList.get(position).getPreviewURL());
             mediaPlayer = CentralAPIManager.getInstance().getMaudioPlayBackService(getActivity().getApplicationContext()).getMediaPlayer();
@@ -270,7 +285,6 @@ public class PlayTrackActivityFragment extends Fragment {
                 });
             }
 
-        }
 
     }
 
@@ -345,7 +359,6 @@ public class PlayTrackActivityFragment extends Fragment {
     }
 
     public interface TrackServiceBridgeCommander {
-        public MediaPlayer getServiceMediaPlayer();
 
         public ArrayList<ParcelableTrack> getTracks();
 
@@ -353,7 +366,6 @@ public class PlayTrackActivityFragment extends Fragment {
 
         public void setPosition(int pos);
 
-        public void playTracks(ArrayList<ParcelableTrack> trackList);
     }
 
 }

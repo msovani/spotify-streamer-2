@@ -20,12 +20,16 @@ import com.sovani.spotifystreamer.model.ParcelableTrack;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements ArtistFragment.TrackListSelectedResultsHandler {
+public class MainActivity extends AppCompatActivity implements ArtistFragment.TrackListSelectedResultsHandler, TopTenFragment.PlayTrackHandler, PlayTrackActivityFragment.TrackServiceBridgeCommander {
 
     private EditText artistName;
     private ArtistFragment artistFragment;
     private boolean mTabletMode;
     private TopTenFragment topTenFragment;
+
+    private ArrayList<ParcelableTrack> trackList;
+    private int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +60,10 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
 
         }else{
 
+            trackList = savedInstanceState.getParcelableArrayList("TOP_TEN_LIST");
+            position = savedInstanceState.getInt("TOP_TEN_POSITION");
+
+
             artistFragment = (ArtistFragment) getSupportFragmentManager().findFragmentByTag("ARTIST_FRAGMENT_TAG");
             artistFragment.setTrackListSelectedResultsHandler(this);
 
@@ -74,6 +82,10 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("SEARCH_TERM", artistName.getText().toString());
+        if (trackList != null) {
+            outState.putParcelableArrayList("TOP_TEN_LIST", trackList);
+        }
+        outState.putInt("TOP_TEN_POSITION", position);
     }
 
 
@@ -153,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
     @Override
     public void onTrackListSelected(String artist, ArrayList<ParcelableTrack> listOfTracks) {
 
-        if (mTabletMode == false) {
+        if (!mTabletMode) {
             Intent topTenIntent = new Intent(MainActivity.this, TopTenActivity.class);
             topTenIntent.putExtra("ARTIST_NAME", artist);
             topTenIntent.putParcelableArrayListExtra("TRACK_LIST", listOfTracks);
@@ -165,9 +177,42 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
             if (listOfTracks != null) {
                 topTenFragment.setTrackList(listOfTracks);
             }
+            topTenFragment.setPlayTrackHandler(this);
             getSupportFragmentManager().beginTransaction().replace(
                     R.id.dynamic_fragment_container, topTenFragment, "TOP_TEN_FRAGMENT_TAG").commit();
 
         }
+    }
+
+    @Override
+    public void onTrackSelected(ArrayList<ParcelableTrack> trackListParam, int positionParam) {
+
+        trackList = trackListParam;
+        position = positionParam;
+
+        ParcelableTrack track = trackList.get(position);
+
+        CentralAPIManager.getInstance().getMaudioPlayBackService(getApplicationContext()).setTracks(track.getPreviewURL());
+
+        // Create the fragment and show it as a dialog.
+        PlayTrackActivityFragment newFragment = PlayTrackActivityFragment.newInstance();
+        newFragment.setTrackList(trackList, position);
+        newFragment.setTrackServiceBridgeCommander(this);
+        newFragment.show(getSupportFragmentManager(), "dialog");
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public ArrayList<ParcelableTrack> getTracks() {
+        return trackList;
+    }
+
+    @Override
+    public void setPosition(int pos) {
+        position = pos;
     }
 }
