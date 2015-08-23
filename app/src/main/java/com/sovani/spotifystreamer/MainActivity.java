@@ -67,6 +67,15 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
                 artistName.setText(searchTerm);
             }
 
+            TopTenFragment topTenFragment  = (TopTenFragment) getSupportFragmentManager().findFragmentByTag("TOP_TEN_FRAGMENT_TAG");
+            if (topTenFragment != null)
+            {
+                if (trackList != null) {
+                    topTenFragment.setTrackList(trackList);
+                }
+                topTenFragment.setPlayTrackHandler(this);
+            }
+
         }
 
 
