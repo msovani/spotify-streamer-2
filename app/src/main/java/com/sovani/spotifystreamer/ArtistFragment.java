@@ -42,6 +42,7 @@ public class ArtistFragment extends Fragment  {
     private ArrayList<ParcelableTrack> trackList;
     private TrackListSelectedResultsHandler trackListSelectedResultsHandler;
     private int selectedPos;
+    private ListView artistListView;
 
     private TrackListSelectedResultsHandler getTrackListSelectedResultsHandler() {
         return trackListSelectedResultsHandler;
@@ -57,12 +58,13 @@ public class ArtistFragment extends Fragment  {
         View fragmentView = inflater.inflate(R.layout.fragment_artist, container, false);
         searchDisplay = (TextView) fragmentView.findViewById(R.id.search_message);
 
+        selectedPos = -1;
         if ((savedInstance != null ) && (savedInstance.containsKey("ARTIST_LIST"))){
             artistList = savedInstance.getParcelableArrayList("ARTIST_LIST");
             selectedPos = savedInstance.getInt("SELECTED_POS", -1);
         }
 
-        ListView artistListView = (ListView) fragmentView.findViewById(R.id.artist_list);
+        artistListView = (ListView) fragmentView.findViewById(R.id.artist_list);
         adapter = new ArtistAdapter();
         artistListView.setAdapter(adapter);
         artistListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -85,6 +87,7 @@ public class ArtistFragment extends Fragment  {
                 }
                 view.setSelected(true);
                 selectedPos = position;
+                adapter.notifyDataSetChanged();
 
             }
         });
@@ -92,6 +95,13 @@ public class ArtistFragment extends Fragment  {
         return fragmentView;
     }
 
+    @Override
+    public void onStart() {
+        if (selectedPos>=0){
+            artistListView.smoothScrollToPosition(selectedPos);
+        }
+        super.onStart();
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -170,6 +180,12 @@ public class ArtistFragment extends Fragment  {
                 Picasso.with(getActivity()).load(R.drawable.spotify_placeholder).into(albumCover);
             }
 
+            if (position == selectedPos)
+            {
+                rootView.setActivated(true);
+            }else{
+                rootView.setActivated(false);
+            }
 
 
             return rootView;

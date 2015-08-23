@@ -74,6 +74,14 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
                     topTenFragment.setTrackList(trackList);
                 }
                 topTenFragment.setPlayTrackHandler(this);
+
+
+            }
+
+            PlayTrackActivityFragment playTrackActivityFragment = (PlayTrackActivityFragment) getSupportFragmentManager().findFragmentByTag("PLAYER_DIALOG");
+            if (playTrackActivityFragment != null)
+            {
+                playTrackActivityFragment.setTrackServiceBridgeCommander(this);
             }
 
         }
@@ -200,9 +208,10 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
 
         // Create the fragment and show it as a dialog.
         PlayTrackActivityFragment newFragment = PlayTrackActivityFragment.newInstance();
+
         newFragment.setTrackList(trackList, position);
         newFragment.setTrackServiceBridgeCommander(this);
-        newFragment.show(getSupportFragmentManager(), "dialog");
+        newFragment.show(getSupportFragmentManager(), "PLAYER_DIALOG");
     }
 
     @Override

@@ -27,6 +27,7 @@ public class TopTenFragment extends Fragment {
     private int selectedPos;
     private PlayTrackHandler playTrackHandler;
     private ListView trackListView;
+    private TrackAdapter adapter;
 
     public PlayTrackHandler getPlayTrackHandler() {
         return playTrackHandler;
@@ -42,7 +43,13 @@ public class TopTenFragment extends Fragment {
 
     public void HighLightTrack(int track)
     {
+        selectedPos = track;
         trackListView.setItemChecked(track, true);
+        if (adapter != null)
+        {
+            adapter.notifyDataSetChanged();
+        }
+        trackListView.smoothScrollToPosition(track);
     }
 
     @Override
@@ -51,9 +58,10 @@ public class TopTenFragment extends Fragment {
         View fragmentView = inflater.inflate(R.layout.fragment_top_ten, container, false);
 
         trackListView = (ListView) fragmentView.findViewById(R.id.track_list);
-        TrackAdapter adapter = new TrackAdapter();
+        adapter = new TrackAdapter();
         trackListView.setAdapter(adapter);
 
+        selectedPos = -1;
         if (savedInstance != null ) {
             trackList = savedInstance.getParcelableArrayList("TOP_TEN_RESULTS");
             selectedPos = savedInstance.getInt("SELECTED_POS", -1);
@@ -62,20 +70,23 @@ public class TopTenFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("TOP10", "onItemClick " + position);
-                if (playTrackHandler != null)
-                {
+                if (playTrackHandler != null) {
                     playTrackHandler.onTrackSelected(trackList, position);
                 }
-                view.setSelected(true);
-                selectedPos = position;
             }
         });
 
         return fragmentView;
     }
 
-    
 
+    @Override
+    public void onStart() {
+        if (selectedPos>=0){
+            trackListView.smoothScrollToPosition(selectedPos);
+        }
+        super.onStart();
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -134,6 +145,12 @@ public class TopTenFragment extends Fragment {
                 Picasso.with(getActivity()).load(getResources().getResourceName(R.drawable.spotify_placeholder));
             }
 
+            if (position == selectedPos)
+            {
+                rootView.setActivated(true);
+            }else {
+                rootView.setActivated(false);
+            }
 
 
             return rootView;
