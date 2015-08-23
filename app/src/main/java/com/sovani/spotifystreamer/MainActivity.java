@@ -37,12 +37,7 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
 
         artistName = (EditText) findViewById(R.id.artist_name);
 
-        if (findViewById(R.id.dynamic_fragment_container) != null)
-        {
-            mTabletMode = true;
-        }else{
-            mTabletMode = false;
-        }
+        mTabletMode = findViewById(R.id.dynamic_fragment_container) != null;
 
         //Create the Music Service here
         CentralAPIManager.getInstance().getMaudioPlayBackService(getApplicationContext());
