@@ -214,6 +214,7 @@ public class PlayTrackActivityFragment extends DialogFragment {
         super.onStart();
     }
 
+    //Displays the track information on screen.
     private void showTrack(int trackNumber) {
         ParcelableTrack track = trackList.get(trackNumber);
 
@@ -230,6 +231,7 @@ public class PlayTrackActivityFragment extends DialogFragment {
         }
     }
 
+
     private void gotoTrack(int trackNumber)
     {
         showTrack(trackNumber);
@@ -244,7 +246,7 @@ public class PlayTrackActivityFragment extends DialogFragment {
 
 
     }
-
+    //This method takes user to previous track. If user is on first track it goes back to last track.
     private void goPrevious()
     {
         if ( (trackList != null) && (trackList.size()>position)) {
@@ -256,6 +258,7 @@ public class PlayTrackActivityFragment extends DialogFragment {
         gotoTrack(position);
     }
 
+    //This method takes user to next track. If user is on last track it goes back to first track.
     private void goNext()
     {
         if ( (trackList != null) && (trackList.size()>position)) {
@@ -267,6 +270,7 @@ public class PlayTrackActivityFragment extends DialogFragment {
         gotoTrack(position);
     }
 
+    //This method sets the preview URL of the track to media player service.
     private void playTrack(){
 
             CentralAPIManager.getInstance().getMaudioPlayBackService(getActivity().getApplicationContext()).setTracks(trackList.get(position).getPreviewURL());
@@ -290,6 +294,7 @@ public class PlayTrackActivityFragment extends DialogFragment {
 
     }
 
+    //Function where the play/ pause toggle is handled.
     private void playPause()
     {
         if (mediaPlayer == null)
@@ -317,6 +322,7 @@ public class PlayTrackActivityFragment extends DialogFragment {
         refreshControls();
     }
 
+    //Refresh screen based on the state of media player and the track length and position.
     private void refreshControls(){
         if (mediaPlayer == null)
         {
@@ -356,10 +362,8 @@ public class PlayTrackActivityFragment extends DialogFragment {
 
     }
 
-    public void setMediaPlayer(MediaPlayer mediaPlayer) {
-        this.mediaPlayer = mediaPlayer;
-    }
 
+    //Interface through with the fragment communicates with the parent/ caller activity.
     public interface TrackServiceBridgeCommander {
 
         public ArrayList<ParcelableTrack> getTracks();

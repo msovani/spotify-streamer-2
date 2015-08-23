@@ -29,9 +29,6 @@ public class TopTenFragment extends Fragment {
     private ListView trackListView;
     private TrackAdapter adapter;
 
-    public PlayTrackHandler getPlayTrackHandler() {
-        return playTrackHandler;
-    }
 
     public void setPlayTrackHandler(PlayTrackHandler playTrackHandler) {
         this.playTrackHandler = playTrackHandler;

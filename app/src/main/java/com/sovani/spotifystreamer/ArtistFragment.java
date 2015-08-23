@@ -341,6 +341,7 @@ public class ArtistFragment extends Fragment  {
                 Toast.LENGTH_SHORT).show();
     }
 
+    //This is a callback handler interface through which this fragment speaks with the parent activity.
     public interface TrackListSelectedResultsHandler {
         public void onTrackListSelected(String artist, ArrayList<ParcelableTrack> listOfTracks);
     }

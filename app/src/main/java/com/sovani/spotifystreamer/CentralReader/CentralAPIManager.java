@@ -30,6 +30,7 @@ public class CentralAPIManager {
     private AudioPlayBackService maudioPlayBackService;
     private AudioPlayBackService.LocalBinder binder;
 
+    //Singleton Instance handler. Ensures that there is only one instance of the API Manager and hence the  AudioPlayBackService.
     public static CentralAPIManager getInstance(){
         if (centralAPIManager == null)
         {

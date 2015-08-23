@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -14,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.sovani.spotifystreamer.CentralReader.CentralAPIManager;
 import com.sovani.spotifystreamer.model.ParcelableTrack;
@@ -199,19 +202,24 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
     @Override
     public void onTrackSelected(ArrayList<ParcelableTrack> trackListParam, int positionParam) {
 
-        trackList = trackListParam;
-        position = positionParam;
+        if (isOnline()) {
+            trackList = trackListParam;
+            position = positionParam;
 
-        ParcelableTrack track = trackList.get(position);
+            ParcelableTrack track = trackList.get(position);
 
-        CentralAPIManager.getInstance().getMaudioPlayBackService(getApplicationContext()).setTracks(track.getPreviewURL());
+            CentralAPIManager.getInstance().getMaudioPlayBackService(getApplicationContext()).setTracks(track.getPreviewURL());
 
-        // Create the fragment and show it as a dialog.
-        PlayTrackActivityFragment newFragment = PlayTrackActivityFragment.newInstance();
+            // Create the fragment and show it as a dialog.
+            PlayTrackActivityFragment newFragment = PlayTrackActivityFragment.newInstance();
 
-        newFragment.setTrackList(trackList, position);
-        newFragment.setTrackServiceBridgeCommander(this);
-        newFragment.show(getSupportFragmentManager(), "PLAYER_DIALOG");
+            newFragment.setTrackList(trackList, position);
+            newFragment.setTrackServiceBridgeCommander(this);
+            newFragment.show(getSupportFragmentManager(), "PLAYER_DIALOG");
+        }else{
+            Toast.makeText(getApplicationContext().getApplicationContext(), getResources().getText(R.string.error_no_network),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -234,5 +242,12 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
             topTenFragment.HighLightTrack(pos);
         }
 
+    }
+    //    credits : http://stackoverflow.com/questions/1560788/how-to-check-internet-access-on-android-inetaddress-never-timeouts
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

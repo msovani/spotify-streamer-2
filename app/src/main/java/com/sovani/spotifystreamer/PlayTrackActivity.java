@@ -1,6 +1,5 @@
 package com.sovani.spotifystreamer;
 
-import android.content.ServiceConnection;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +11,11 @@ import com.sovani.spotifystreamer.model.ParcelableTrack;
 
 import java.util.ArrayList;
 
+/**
+ * This activity is used in phone ui mode to show the fragment for playing tracks.
+ * It implements a TrackServiceBridgeCommander callback handler so that fragment can
+ * get the track details.
+ */
 public class PlayTrackActivity extends AppCompatActivity implements PlayTrackActivityFragment.TrackServiceBridgeCommander {
 
 
@@ -35,13 +39,13 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
         return tracks;
     }
 
-    private ServiceConnection mConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tracks = this.getIntent().getParcelableArrayListExtra("TRACK_LIST");
 
+        //Get instance of the Media Player service from Central API singleton.
         maudioPlayBackService = CentralAPIManager.getInstance().getMaudioPlayBackService(getApplicationContext());
 
         if (savedInstanceState == null) {
@@ -57,14 +61,15 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
             getSupportFragmentManager().beginTransaction().replace(
                     android.R.id.content, fragment, "PLAY_TRACK").commit();
 
+            //Rubric states that app should start playing song as soon as user clicks on it.
             CentralAPIManager.getInstance().getMaudioPlayBackService(getApplicationContext()).setTracks(tracks.get(position).getPreviewURL());
 
         }else{
 
+            //App has rotated hence we need to restore the state.
             setPosition(savedInstanceState.getInt("SAVED_TRACK_POSITION", 0));
 
-
-
+            //No need to create a new fragment, we just find old fragment by its tag.
             fragment  = (PlayTrackActivityFragment) getSupportFragmentManager().findFragmentByTag("PLAY_TRACK");
             fragment.setTrackServiceBridgeCommander(this);
             if (tracks != null) {
@@ -84,9 +89,9 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
 
     }
 
+    //Save position so that we can restore on rotation
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-
         outState.putInt("SAVED_TRACK_POSITION", position);
         super.onSaveInstanceState(outState);
     }
@@ -107,10 +112,13 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
         return super.onOptionsItemSelected(item);
     }
 
+    // Stop playing song when user goes back.
     @Override
     public void onBackPressed() {
         if (maudioPlayBackService!= null)
         {
+            //Since the rubric does not explicitly state if we should stop playback when user presses back button.
+            //The track is stopped here.
             maudioPlayBackService.getMediaPlayer().stop();
         }
         super.onBackPressed();

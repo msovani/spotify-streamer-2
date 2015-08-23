@@ -8,12 +8,13 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
-
+/**
+ * Main service which handles MediaPlayer instantiation and track play/ pause functions.
+ **/
 public class AudioPlayBackService extends Service {
 
     private static final String DEBUG_TAG = "AudioPBService";
     private MediaPlayer mp;
-
 
     private String track;
 
@@ -38,9 +39,6 @@ public class AudioPlayBackService extends Service {
             });
             mp.prepareAsync();
 
-
-
-
         } catch (Exception e) {
             Log.e(DEBUG_TAG, "Player failed", e);
         }
@@ -51,9 +49,7 @@ public class AudioPlayBackService extends Service {
 
     @Override
     public void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
-        Log.d(DEBUG_TAG, "In onDestroy.");
         if(mp != null) {
             mp.stop();
         }
@@ -63,11 +59,11 @@ public class AudioPlayBackService extends Service {
     @Override
     public int onStartCommand(Intent intent,int flags, int startId) {
         super.onStart(intent, startId);
-        Log.d(DEBUG_TAG, "In onStart.");
         mp.start();
         return Service.START_STICKY_COMPATIBILITY;
     }
 
+    //This function takes a track URL as a string and sets it as a member variable.
     public void setTracks(String passedTrack)
     {
         track = passedTrack;
@@ -97,6 +93,7 @@ public class AudioPlayBackService extends Service {
         }
     }
 
+    //Expose the MediaPlayer so that the player dialog can set call backs on it directly.
     public MediaPlayer getMediaPlayer(){
         return mp;
     }
