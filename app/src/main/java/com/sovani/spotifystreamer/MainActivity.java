@@ -214,5 +214,12 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
     @Override
     public void setPosition(int pos) {
         position = pos;
+
+        topTenFragment = (TopTenFragment) getSupportFragmentManager().findFragmentByTag("TOP_TEN_FRAGMENT_TAG");
+        if (topTenFragment != null)
+        {
+            topTenFragment.HighLightTrack(pos);
+        }
+
     }
 }

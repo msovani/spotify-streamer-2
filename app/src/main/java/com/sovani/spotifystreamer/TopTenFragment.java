@@ -27,6 +27,7 @@ public class TopTenFragment extends Fragment {
     private ArrayList<ParcelableTrack> trackList;
     private int selectedPos;
     private PlayTrackHandler playTrackHandler;
+    private ListView trackListView;
 
     public PlayTrackHandler getPlayTrackHandler() {
         return playTrackHandler;
@@ -40,12 +41,17 @@ public class TopTenFragment extends Fragment {
         this.trackList = trackList;
     }
 
+    public void HighLightTrack(int track)
+    {
+        trackListView.setItemChecked(track, true);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance)
     {
         View fragmentView = inflater.inflate(R.layout.fragment_top_ten, container, false);
 
-        ListView trackListView = (ListView) fragmentView.findViewById(R.id.track_list);
+        trackListView = (ListView) fragmentView.findViewById(R.id.track_list);
         TrackAdapter adapter = new TrackAdapter();
         trackListView.setAdapter(adapter);
 
