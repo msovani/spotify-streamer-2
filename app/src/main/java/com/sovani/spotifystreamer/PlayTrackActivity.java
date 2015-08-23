@@ -4,7 +4,6 @@ import android.content.ServiceConnection;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.sovani.spotifystreamer.MediaService.AudioPlayBackService;
@@ -20,7 +19,7 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
     private ArrayList<ParcelableTrack> tracks = null;
     private int position = 0;
 
-    AudioPlayBackService maudioPlayBackService;
+    private AudioPlayBackService maudioPlayBackService;
 
     private PlayTrackActivityFragment fragment;
 
@@ -92,12 +91,6 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_play_track, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
