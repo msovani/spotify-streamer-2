@@ -85,6 +85,7 @@ public class TopTenFragment extends Fragment {
         super.onStart();
     }
 
+    //Save list of tracks and selected position so that we can restore it on rotation.
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -142,6 +143,7 @@ public class TopTenFragment extends Fragment {
                 Picasso.with(getActivity()).load(getResources().getResourceName(R.drawable.spotify_placeholder));
             }
 
+            //If the current track is selected then flag it so, this will help tablet style paint it.
             if (position == selectedPos)
             {
                 rootView.setActivated(true);
@@ -154,6 +156,7 @@ public class TopTenFragment extends Fragment {
         }
     }
 
+    //Call back handler which gets notified about selected track
     public interface PlayTrackHandler {
         public void onTrackSelected(ArrayList<ParcelableTrack> trackList, int position);
     }

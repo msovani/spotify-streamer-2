@@ -1,6 +1,5 @@
 package com.sovani.spotifystreamer;
 
-//import android.app.ActionBar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +12,10 @@ import com.sovani.spotifystreamer.model.ParcelableTrack;
 import java.util.ArrayList;
 
 
+/**
+ * This class is used to show the top 10 results in a fragment in phone ui mode.
+ * This activity speaks with top 10 results fragment via PlayTrackHandler callback.
+ */
 public class TopTenActivity extends AppCompatActivity implements TopTenFragment.PlayTrackHandler{
 
     @Override
