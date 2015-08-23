@@ -142,11 +142,12 @@ public class PlayTrackActivityFragment extends DialogFragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBarParam) {
-                touchinprogress = false;
                 if (mediaPlayer!=null)
                 {
                     mediaPlayer.seekTo(seekBarParam.getProgress());
                     mediaPlayer.start();
+                    touchinprogress = false;
+
                 }
             }
         });
@@ -190,7 +191,6 @@ public class PlayTrackActivityFragment extends DialogFragment {
                     try {
                         if (mediaPlayer != null) {
                             if (mediaPlayer.isPlaying()) {
-                                seekBar.setMax(0);
                                 seekBar.setMax(mediaPlayer.getDuration());
                                 if (maxPos != null) maxPos.setText(getResources().getString(R.string.duration_title, mediaPlayer.getDuration() / 1000));
                                 int mCurrentPosition = mediaPlayer.getCurrentPosition();
@@ -204,7 +204,8 @@ public class PlayTrackActivityFragment extends DialogFragment {
                     } catch (Exception e) {
                         Log.e("PlayFragment", "Exception during progress update thread" + e.toString());
                     }
-                    mHandler.postDelayed(this, 100);
+                        mHandler.postDelayed(this, 100);
+
                 }
             };
             getActivity().runOnUiThread(statusUpdater);
@@ -274,7 +275,6 @@ public class PlayTrackActivityFragment extends DialogFragment {
                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
-                        seekBar.setProgress(0);
                         refreshControls();
                     }
                 });
