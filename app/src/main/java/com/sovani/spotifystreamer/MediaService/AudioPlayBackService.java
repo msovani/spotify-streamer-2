@@ -1,6 +1,4 @@
 package com.sovani.spotifystreamer.MediaService;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -15,15 +13,9 @@ public class AudioPlayBackService extends Service {
 
     private static final String DEBUG_TAG = "AudioPBService";
     private MediaPlayer mp;
-    private AlarmManager alarmMgr;
-    private PendingIntent alarmIntent;
 
-    private String[] tracks = {
-
-    };
 
     private String track;
-    private int currentTrack = 0;
 
 
 
@@ -65,10 +57,7 @@ public class AudioPlayBackService extends Service {
         if(mp != null) {
             mp.stop();
         }
-        // If the alarm has been set, cancel it.
-        if (alarmMgr!= null) {
-            alarmMgr.cancel(alarmIntent);
-        }
+
     }
 
     @Override
@@ -90,39 +79,7 @@ public class AudioPlayBackService extends Service {
         playTracks();
     }
 
-    public void pausePlayer()
-    {
 
-        if (mp != null) {
-            if (mp.isPlaying()) {
-                mp.pause();
-            }
-        }
-
-    }
-
-    public void resumePlayer()
-    {
-
-        if (mp != null) {
-            if (mp.getCurrentPosition()>0) {
-                mp.start();
-            }
-        }
-
-    }
-
-
-    public void startPlayer()
-    {
-
-        if (mp != null) {
-            if (!mp.isPlaying()) {
-                mp.start();
-            }
-        }
-
-    }
 
 
     @Override
