@@ -1,15 +1,9 @@
 package com.sovani.spotifystreamer;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
 import android.content.ServiceConnection;
-import android.media.MediaPlayer;
-import android.os.IBinder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -128,37 +122,5 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
         }
         super.onBackPressed();
     }
-
-
-
-    public void playTracks(ArrayList<ParcelableTrack> trackList){
-
-
-        if (maudioPlayBackService != null){
-            String[] tracks = new String[trackList.size()];
-            int i=0;
-            for (ParcelableTrack track : trackList)
-            {
-                tracks[i] =   track.getPreviewURL();
-                i++;
-            }
-//            maudioPlayBackService.setTracks(tracks);
-        }
-    }
-
-
-    public MediaPlayer getServiceMediaPlayer(){
-        MediaPlayer mediaPlayer = null;
-        if (maudioPlayBackService != null){
-            mediaPlayer = maudioPlayBackService.getMediaPlayer();
-            if (fragment != null)
-            {
-                fragment.setMediaPlayer(mediaPlayer);
-
-            }
-        }
-        return mediaPlayer;
-    }
-
 
 }
