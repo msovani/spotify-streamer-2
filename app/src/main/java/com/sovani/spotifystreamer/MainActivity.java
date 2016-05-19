@@ -1,10 +1,13 @@
 package com.sovani.spotifystreamer;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -19,6 +22,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.sovani.spotifystreamer.CentralReader.CentralAPIManager;
+import com.sovani.spotifystreamer.CentralReader.RemoteDataManager;
 import com.sovani.spotifystreamer.model.ParcelableTrack;
 
 import java.util.ArrayList;
@@ -36,6 +40,10 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        android.support.v7.app.ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#b55c5c")));
+        }
         setContentView(R.layout.activity_main);
 
         artistName = (EditText) findViewById(R.id.artist_name);
@@ -110,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
     {
         super.onResume();
 
+
         artistName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -123,7 +132,8 @@ public class MainActivity extends AppCompatActivity implements ArtistFragment.Tr
 
             @Override
             public void afterTextChanged(Editable s) {
-                artistFragment.getArtists(s.toString());
+//                artistFragment.getArtists(s.toString());
+//                RemoteDataManager.getArtists(MainActivity.this, null, null);
             }
         });
     }

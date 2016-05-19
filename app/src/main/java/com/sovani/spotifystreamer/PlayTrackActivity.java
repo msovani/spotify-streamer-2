@@ -1,5 +1,7 @@
 package com.sovani.spotifystreamer;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,6 +45,10 @@ public class PlayTrackActivity extends AppCompatActivity implements PlayTrackAct
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        android.support.v7.app.ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#b55c5c")));
+        }
         tracks = this.getIntent().getParcelableArrayListExtra("TRACK_LIST");
 
         //Get instance of the Media Player service from Central API singleton.

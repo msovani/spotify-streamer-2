@@ -17,10 +17,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
 import com.sovani.spotifystreamer.CentralReader.CentralAPIManager;
+import com.sovani.spotifystreamer.CentralReader.RemoteDataManager;
 import com.sovani.spotifystreamer.model.ParcelableArtist;
 import com.sovani.spotifystreamer.model.ParcelableTrack;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -37,7 +41,7 @@ public class ArtistFragment extends Fragment  {
     private ArrayList<ParcelableArtist> artistList;
     private ArtistAdapter adapter;
     private TextView searchDisplay;
-    private RetrieveCentralFeed rcf;
+//    private RetrieveCentralFeed rcf;
     private RetrieveTracks rt;
     private ArrayList<ParcelableTrack> trackList;
     private TrackListSelectedResultsHandler trackListSelectedResultsHandler;
@@ -79,9 +83,10 @@ public class ArtistFragment extends Fragment  {
                             rt.cancel(true);
                         }
                     }
-                    rt = new RetrieveTracks(ArtistFragment.this);
-                    rt.execute(artist);
-                }else{
+                    showTracks(ArtistFragment.this, artist.getArtistName());
+//                    rt = new RetrieveTracks(ArtistFragment.this);
+//                    rt.execute(artist);
+                } else {
                     searchDisplay.setText(getResources().getText(R.string.error_no_network));
                     showToast(getResources().getText(R.string.error_no_network).toString());
                 }
@@ -91,7 +96,12 @@ public class ArtistFragment extends Fragment  {
 
             }
         });
-
+        RemoteDataManager.getArtists(getActivity(), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                adapter.notifyDataSetChanged();
+            }
+        }, null);
         return fragmentView;
     }
 
@@ -100,6 +110,8 @@ public class ArtistFragment extends Fragment  {
         if (selectedPos>=0){
             artistListView.smoothScrollToPosition(selectedPos);
         }
+
+
         super.onStart();
     }
 
@@ -111,38 +123,38 @@ public class ArtistFragment extends Fragment  {
 
     }
 
-    public void getArtists(String artistName)
-    {
-
-        if (isOnline()) {
-            if ((artistName != null) && (artistName.length() > 0)) {
-
-                if (rcf != null) {
-                    if (rcf.getStatus() == AsyncTask.Status.RUNNING) {
-                        rcf.cancel(true);
-                    }
-                }
-
-                rcf = new RetrieveCentralFeed();
-
-                searchDisplay.setText(getResources().getText(R.string.message_searching));
-                rcf.execute(artistName);
-            }
-        }else{
-            searchDisplay.setText(getResources().getText(R.string.error_no_network));
-            showToast(getResources().getString(R.string.error_no_network));
-
-
-        }
-    }
+//    public void getArtists(String artistName)
+//    {
+//
+//        if (isOnline()) {
+//            if ((artistName != null) && (artistName.length() > 0)) {
+//
+//                if (rcf != null) {
+//                    if (rcf.getStatus() == AsyncTask.Status.RUNNING) {
+//                        rcf.cancel(true);
+//                    }
+//                }
+//
+//                rcf = new RetrieveCentralFeed();
+//
+//                searchDisplay.setText(getResources().getText(R.string.message_searching));
+//                rcf.execute(artistName);
+//            }
+//        }else{
+//            searchDisplay.setText(getResources().getText(R.string.error_no_network));
+//            showToast(getResources().getString(R.string.error_no_network));
+//
+//
+//        }
+//    }
 
     private class ArtistAdapter extends BaseAdapter{
         @Override
         public int getCount() {
             int count = 0;
-            if (artistList!= null)
+            if (RemoteDataManager.vedantaAlbums!= null)
             {
-                count = artistList.size();
+                count = RemoteDataManager.vedantaAlbums.size();
             }
             return count;
         }
@@ -154,13 +166,13 @@ public class ArtistFragment extends Fragment  {
 
         @Override
         public ParcelableArtist getItem(int position) {
-            return artistList.get(position);
+            return RemoteDataManager.vedantaAlbums.get(position);
         }
 
 
         @Override
         public long getItemId(int position) {
-            return artistList.get(position).getId().hashCode();
+            return RemoteDataManager.vedantaAlbums.get(position).getId().hashCode();
         }
 
         @Override
@@ -192,58 +204,71 @@ public class ArtistFragment extends Fragment  {
         }
     }
 
-    private class RetrieveCentralFeed extends AsyncTask<String, Void, ArtistsPager>
-    {
-        protected ArtistsPager doInBackground(String... params){
-            ArtistsPager pagers = null;
-            if (params.length >0) {
-                pagers = CentralAPIManager.getArtistPager(params[0]);
-            }
-            if(pagers != null) {
-                Log.d("MainScreen", pagers.toString());
-            }
-
-            return pagers;
-        }
-        protected void onPostExecute(ArtistsPager pager)
+//    private class RetrieveCentralFeed extends AsyncTask<String, Void, ArtistsPager>
+//    {
+//        protected ArtistsPager doInBackground(String... params){
+//            ArtistsPager pagers = null;
+//            if (params.length >0) {
+//                pagers = CentralAPIManager.getArtistPager(params[0]);
+//            }
+//            if(pagers != null) {
+//                Log.d("MainScreen", pagers.toString());
+//            }
+//
+//            return pagers;
+//        }
+//        protected void onPostExecute(ArtistsPager pager)
+//        {
+//            if (pager!= null) {
+//                if (artistList == null)
+//                {
+//                    artistList = new ArrayList<>();
+//                }
+//                    artistList.clear();
+//
+//                for (Artist artist : pager.artists.items)
+//                {
+//                    String url;
+//                    if (artist.images.size()>0)
+//                    {
+//                        Image image = artist.images.get(0);
+//                        url = image.url;
+//                    }else {
+//                        url = "";
+//                    }
+//                    ParcelableArtist pArtist = new ParcelableArtist(artist.name, url, artist.id);
+//                    artistList.add(pArtist);
+//                }
+//            }
+//
+//            if ((pager == null) || (pager.artists.items.size()==0))
+//            {
+//                searchDisplay.setText(getResources().getText(R.string.error_no_albums));
+//
+//            }else {
+//                searchDisplay.setText("");
+//            }
+//
+//            adapter.notifyDataSetChanged();
+//            if (pager != null) {
+//                Log.d("AsyncTask", pager.toString());
+//            }
+//        }
+//    }
+    public void showTracks (ArtistFragment fragment,String artist){
+        trackList = RemoteDataManager.getTracks(artist);
+        if ((trackList != null) && (trackList.size()>0))
         {
-            if (pager!= null) {
-                if (artistList == null)
-                {
-                    artistList = new ArrayList<>();
-                }
-                    artistList.clear();
+            //clear our old hit
+            searchDisplay.setText("");
 
-                for (Artist artist : pager.artists.items)
-                {
-                    String url;
-                    if (artist.images.size()>0)
-                    {
-                        Image image = artist.images.get(0);
-                        url = image.url;
-                    }else {
-                        url = "";
-                    }
-                    ParcelableArtist pArtist = new ParcelableArtist(artist.name, url, artist.id);
-                    artistList.add(pArtist);
-                }
+            //We have found tracks, hence we can now start the top10 activity
+            if (fragment.getTrackListSelectedResultsHandler() != null) {
+                fragment.getTrackListSelectedResultsHandler().onTrackListSelected(artist, trackList);
             }
 
-            if ((pager == null) || (pager.artists.items.size()==0))
-            {
-                searchDisplay.setText(getResources().getText(R.string.error_no_albums));
-
-            }else {
-                searchDisplay.setText("");
-            }
-
-            adapter.notifyDataSetChanged();
-            if (pager != null) {
-                Log.d("AsyncTask", pager.toString());
-            }
         }
     }
-
     //This inner class checks tracks for selected artist.
     class RetrieveTracks extends AsyncTask<ParcelableArtist, Void, Tracks>
     {

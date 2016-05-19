@@ -1,6 +1,6 @@
 <resources>
     <!-- main app related -->
-    <string name="app_name">Spotify Streamer</string>
+    <string name="app_name">Vedanta World</string>
     <string name="action_settings">Settings</string>
 
     <!-- main album list related related -->
@@ -20,7 +20,7 @@
     <string name="title_pause">Pause</string>
     <string name="title_prev">Previous</string>
     <string name="title_next">Next</string>
-    <string name="duration_title">%1$d Sec</string>
+    <string name="duration_title">%1$s </string>
     <string name="album_cover_description">Album Cover</string>
 
     <!-- Country Search Related -->

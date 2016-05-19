@@ -2,6 +2,8 @@ package com.sovani.spotifystreamer;
 
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -40,7 +42,7 @@ public class TopTenActivity extends AppCompatActivity implements TopTenFragment.
             actionBar.setDisplayHomeAsUpEnabled(true);
             String name = this.getIntent().getStringExtra("ARTIST_NAME");
             actionBar.setSubtitle(name);
-
+            actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#b55c5c")));
         }
         ArrayList<ParcelableTrack> tracks = this.getIntent().getParcelableArrayListExtra("TRACK_LIST");
 

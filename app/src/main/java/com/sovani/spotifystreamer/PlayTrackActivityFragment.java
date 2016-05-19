@@ -192,12 +192,27 @@ public class PlayTrackActivityFragment extends DialogFragment {
                         if (mediaPlayer != null) {
                             if (mediaPlayer.isPlaying()) {
                                 seekBar.setMax(mediaPlayer.getDuration());
-                                if (maxPos != null) maxPos.setText(getResources().getString(R.string.duration_title, mediaPlayer.getDuration() / 1000));
+
+                                int max_duration = mediaPlayer.getDuration()/1000;
+                                int hours =  max_duration / 3600;
+                                int minutes = (max_duration  % 3600) / 60;
+                                int seconds = max_duration  % 60;
+
+                                String timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+
+                                if (maxPos != null) maxPos.setText(getResources().getString(R.string.duration_title, timeString));
                                 int mCurrentPosition = mediaPlayer.getCurrentPosition();
 
                                 if (!touchinprogress) seekBar.setProgress(mCurrentPosition);
+                                int curr_postion = mediaPlayer.getCurrentPosition()/1000;
 
-                                if (currPos != null) currPos.setText(getResources().getString(R.string.duration_title, mediaPlayer.getCurrentPosition() / 1000));
+                                hours = curr_postion / 3600;
+                                minutes = (curr_postion % 3600) / 60;
+                                seconds = curr_postion  % 60;
+
+                                timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+
+                                if (currPos != null) currPos.setText(getResources().getString(R.string.duration_title, timeString));
                             }
                             refreshControls();
                         }

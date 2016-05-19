@@ -1,6 +1,6 @@
 package com.sovani.spotifystreamer.MediaService;
-import android.app.Service;
 import android.content.Intent;
+import android.app.Service;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
